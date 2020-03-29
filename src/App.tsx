@@ -8,6 +8,7 @@ import {
   Path,
   Hex
 } from "react-hexgrid"
+import { PlayerRepoBoard } from "./player-repo/PlayerRepoBoard"
 
 function App() {
   const grid = GridGenerator.hexagon(3)
@@ -28,6 +29,7 @@ function App() {
           ))}
         </Layout>
       </HexGrid>
+      <PlayerRepoBoard />
     </div>
   )
 }
