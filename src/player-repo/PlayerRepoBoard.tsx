@@ -1,6 +1,12 @@
 import React from "react"
-import styles from "PlayerRepoBoard.module.scss"
+import { TreePlaceholder } from "./TreePlaceholder"
+import styles from "./PlayerRepoBoard.module.scss"
 
 export function PlayerRepoBoard() {
-  return <div className={styles.wrapper}>Board</div>
+  return (
+    <div className={styles.wrapper}>
+      <TreePlaceholder />
+      Board
+    </div>
+  )
 }
