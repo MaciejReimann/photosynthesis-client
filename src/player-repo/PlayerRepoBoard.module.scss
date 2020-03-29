@@ -3,4 +3,21 @@
   bottom: 50px;
   left: 50px;
   background-color: red;
+  box-sizing: border-box;
+}
+
+.placeholders-wrapper {
+  display: flex;
+  padding: 5px;
+}
+
+.placeholders {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 5px;
+
+  > svg {
+    padding: 2px;
+  }
 }
