@@ -5,6 +5,9 @@ import Konva from "konva"
 
 export interface GameboardFieldProps extends Konva.CircleConfig {}
 
-export const GameboardField = ({ ...props }: GameboardFieldProps) => (
-  <Circle stroke="black" strokeWidth={3} {...props} />
+export const GameboardField = ({ children, ...props }: GameboardFieldProps) => (
+  <>
+    <Circle stroke="black" strokeWidth={3} {...props} />
+    {children}
+  </>
 )

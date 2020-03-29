@@ -1,5 +1,5 @@
 import React from "react"
-import { Layer, Text } from "react-konva"
+import { Layer, Circle } from "react-konva"
 import { GridGenerator } from "react-hexgrid"
 
 import { Point } from "../utils/Point"
@@ -16,28 +16,63 @@ interface GameboardProps {
   config: GameboardConfig
 }
 
+enum SpriteType {
+  Seed = "seed",
+  SmallTree = "small tree"
+}
+
+class SmallTree {}
+class Seed {}
+
+type Sprite = SmallTree | Seed
+
+function SpriteFactory(type: SpriteType): Sprite {
+  if (type === SpriteType.SmallTree) return new SmallTree()
+  return new Seed()
+}
+
+class HexGameField {
+  constructor(readonly coords: HexCubeCoords, readonly populatedBy?: Sprite) {
+    this.coords = coords
+    this.populatedBy = populatedBy
+  }
+}
+
 export function Gameboard({ config }: GameboardProps) {
   const { center, gamefield } = config
-  const grid = GridGenerator.hexagon(3)
+  const grid = GridGenerator.hexagon(3).map(
+    (hex: any, i: number) =>
+      new HexGameField(
+        new HexCubeCoords(hex.s, hex.r, hex.q),
+        i < 5 ? SpriteFactory(SpriteType.SmallTree) : undefined
+      )
+  )
 
   return (
     <Layer>
-      {grid.map((hex: HexAxial, i: number) => {
-        const offset = offsetToPixel(hex, gamefield.radius + gamefield.distance)
-
-        console.log(hex)
-        console.log(getRingIndex(hex))
+      {grid.map((field: HexGameField, i: number) => {
+        const offset = offsetToPixel(
+          field.coords,
+          gamefield.radius + gamefield.distance
+        )
+        // console.log(field)
 
         return (
           <GameboardField
-            opacity={0.5 + 1 / (getRingIndex(hex) + 1)}
-            fill={getColorForHex(hex)}
+            opacity={0.5 + 1 / (getRingIndex(field.coords) + 1)}
+            fill={getColorForHex(field.coords)}
             radius={gamefield.radius}
             x={offset.x + center.x}
             y={offset.y + center.y}
             key={`${offset.x}${i}`}
           >
-            {/* <Text text="Some text on canvas" fontSize={15} /> */}
+            {field.populatedBy && (
+              <SpriteComponent
+                sprite={field.populatedBy}
+                x={offset.x + center.x}
+                y={offset.y + center.y}
+              />
+            )}
           </GameboardField>
         )
       })}
@@ -45,19 +80,13 @@ export function Gameboard({ config }: GameboardProps) {
   )
 }
 
-function getColorForHex(hex: HexAxial): string {
-  const colors = [
-    GamefieldBackground.Center,
-    GamefieldBackground.FirstRow,
-    GamefieldBackground.SecondRow,
-    GamefieldBackground.ThirdRow
-  ]
-  return colors[getRingIndex(hex)]
+interface SpriteComponentProps extends Point {
+  sprite: Sprite
 }
 
-function getRingIndex(hex: HexAxial): number {
-  if (hex.q === 0 && hex.r === 0) return 0
-  return getHexDistance(hex, new CentralHex())
+function SpriteComponent({ sprite, ...props }: SpriteComponentProps) {
+  console.log(sprite)
+  return <Circle radius={10} {...props} fill={"black"} />
 }
 
 enum GamefieldBackground {
@@ -67,26 +96,41 @@ enum GamefieldBackground {
   ThirdRow = "#adbd53"
 }
 
-class CentralHex implements HexAxial {
+function getColorForHex(hex: HexAxialCoords): string {
+  const colors = [
+    GamefieldBackground.Center,
+    GamefieldBackground.FirstRow,
+    GamefieldBackground.SecondRow,
+    GamefieldBackground.ThirdRow
+  ]
+  return colors[getRingIndex(hex)]
+}
+
+function getRingIndex(hex: HexAxialCoords): number {
+  if (hex.q === 0 && hex.r === 0) return 0
+  return getHexDistance(hex, new CentralHexCoords())
+}
+
+class CentralHexCoords implements HexAxialCoords {
   readonly q = 0
   readonly r = 0
 }
 
-class HexAxial {
+class HexAxialCoords {
   constructor(readonly q: number, readonly r: number) {
     this.q = q
     this.r = r
   }
 }
 
-class HexCube extends HexAxial {
+class HexCubeCoords extends HexAxialCoords {
   constructor(readonly s: number, readonly q: number, readonly r: number) {
     super(q, r)
     this.s = s
   }
 }
 
-function getCubeDistance(hex1: HexCube, hex2: HexCube): number {
+function getCubeDistance(hex1: HexCubeCoords, hex2: HexCubeCoords): number {
   return Math.max(
     Math.abs(hex1.q - hex2.q),
     Math.abs(hex1.r - hex2.r),
@@ -94,15 +138,15 @@ function getCubeDistance(hex1: HexCube, hex2: HexCube): number {
   )
 }
 
-function getHexDistance(hex1: HexAxial, hex2: HexAxial): number {
+function getHexDistance(hex1: HexAxialCoords, hex2: HexAxialCoords): number {
   var cubeHex1 = axialToCube(hex1)
   var cubeHex2 = axialToCube(hex2)
   return getCubeDistance(cubeHex1, cubeHex2)
 }
 
-function axialToCube(hex: HexAxial): HexCube {
+function axialToCube(hex: HexAxialCoords): HexCubeCoords {
   const x = hex.q
   const z = hex.r
   const y = -x - z
-  return new HexCube(x, z, y)
+  return new HexCubeCoords(x, z, y)
 }
