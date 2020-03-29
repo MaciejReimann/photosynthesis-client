@@ -1,33 +1,21 @@
 import React from "react"
-import {
-  GridGenerator,
-  HexGrid,
-  Layout,
-  Hexagon,
-  Text,
-  Path,
-  Hex
-} from "react-hexgrid"
+import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
+
+import { Gameboard } from "./gameboard/Gameboard"
+import { Point } from "./utils/Point"
 
 function App() {
-  const grid = GridGenerator.hexagon(3)
+  const width = window.innerWidth
+  const height = window.innerHeight
+
+  const center = new Point(width / 2, height / 2.5)
   return (
     <div className="App">
-      <HexGrid width={1200} height={800} viewBox="-50 -50 100 100">
-        {/* Grid with manually inserted hexagons */}
-        <Layout
-          size={{ x: 5, y: 5 }}
-          flat={false}
-          spacing={1.1}
-          origin={{ x: 0, y: 0 }}
-        >
-          {grid.map((hex: any, i: number) => (
-            <Hexagon key={i} q={hex.q} r={hex.r} s={hex.s}>
-              <Text>1, -1, 0</Text>{" "}
-            </Hexagon>
-          ))}
-        </Layout>
-      </HexGrid>
+      <Stage width={width} height={height}>
+        <Gameboard
+          config={{ center, gamefield: { radius: 32, distance: 10 } }}
+        />
+      </Stage>
     </div>
   )
 }
