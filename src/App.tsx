@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <Stage width={width} height={height}>
         <Gameboard
-          config={{ center, gamefield: { radius: 32, distance: 10 } }}
+          config={{ center, gamefield: { radius: 37, distance: 10 } }}
         />
       </Stage>
     </div>
