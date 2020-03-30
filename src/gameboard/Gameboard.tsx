@@ -12,8 +12,48 @@ type GameboardConfig = {
   gamefield: GameboardFieldProps
 }
 
+export enum SunPosition {
+  West = "west"
+}
+
+function getShadedFields(
+  sunPosition: SunPosition,
+  field: HexGameField
+): HexCubeCoords[] {
+  if (sunPosition === SunPosition.West) {
+    return [
+      new HexCubeCoords(field.coords.s - 1, field.coords.q, field.coords.r + 1)
+    ]
+  }
+  return [new HexCubeCoords(field.coords.s + 1, field.coords.q, field.coords.r)]
+}
+
+function getFieldsInShadow(
+  sunPosition: SunPosition,
+  grid: HexGameField[]
+): HexCubeCoords[] {
+  const fieldsWithTrees = grid.filter(
+    (field: HexGameField) => field.populatedBy
+  )
+
+  let shadedFields: HexCubeCoords[] = []
+
+  fieldsWithTrees.forEach((field: HexGameField) => {
+    const shadedField = getShadedFields(sunPosition, field)
+    shadedFields.push(...shadedField)
+  })
+  return shadedFields
+}
+
+function hexFieldsAreEqual(hex1: HexCubeCoords, hex2: HexCubeCoords): boolean {
+  //   console.log("hex1", hex1)
+  //   console.log("hex2", hex2)
+  return hex1.q === hex2.q && hex1.r === hex2.r && hex1.s === hex2.s
+}
+
 interface GameboardProps {
   config: GameboardConfig
+  sunPosition: SunPosition
 }
 
 enum SpriteType {
@@ -38,15 +78,17 @@ class HexGameField {
   }
 }
 
-export function Gameboard({ config }: GameboardProps) {
+export function Gameboard({ config, sunPosition }: GameboardProps) {
   const { center, gamefield } = config
   const grid = GridGenerator.hexagon(3).map(
     (hex: any, i: number) =>
       new HexGameField(
-        new HexCubeCoords(hex.s, hex.r, hex.q),
-        i < 5 ? SpriteFactory(SpriteType.SmallTree) : undefined
+        new HexCubeCoords(hex.s, hex.q, hex.r),
+        i > 5 && i < 10 ? SpriteFactory(SpriteType.SmallTree) : undefined
       )
   )
+
+  const fieldsInShadow = getFieldsInShadow(sunPosition, grid)
 
   return (
     <Layer>
@@ -55,12 +97,17 @@ export function Gameboard({ config }: GameboardProps) {
           field.coords,
           gamefield.radius + gamefield.distance
         )
-        // console.log(field)
+
+        const isInShade = fieldsInShadow.some(f =>
+          hexFieldsAreEqual(f, field.coords)
+        )
+
+        const shadeFill = isInShade ? "black" : undefined
 
         return (
           <GameboardField
             opacity={0.5 + 1 / (getRingIndex(field.coords) + 1)}
-            fill={getColorForHex(field.coords)}
+            fill={shadeFill || getColorForHex(field.coords)}
             radius={gamefield.radius}
             x={offset.x + center.x}
             y={offset.y + center.y}
@@ -68,6 +115,7 @@ export function Gameboard({ config }: GameboardProps) {
           >
             {field.populatedBy && (
               <SpriteComponent
+                {...field}
                 sprite={field.populatedBy}
                 x={offset.x + center.x}
                 y={offset.y + center.y}
@@ -85,7 +133,7 @@ interface SpriteComponentProps extends Point {
 }
 
 function SpriteComponent({ sprite, ...props }: SpriteComponentProps) {
-  console.log(sprite)
+  console.log(props)
   return <Circle radius={10} {...props} fill={"black"} />
 }
 

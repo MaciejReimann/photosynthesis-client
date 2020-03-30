@@ -1,7 +1,7 @@
 import React from "react"
 import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
-import { Gameboard } from "./gameboard/Gameboard"
+import { Gameboard, SunPosition } from "./gameboard/Gameboard"
 import { Point } from "./utils/Point"
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
       <Stage width={width} height={height}>
         <Gameboard
           config={{ center, gamefield: { radius: 37, distance: 10 } }}
+          sunPosition={SunPosition.West}
         />
       </Stage>
     </div>
