@@ -1,22 +1,38 @@
 import React from "react"
-import { Layer, Circle } from "react-konva"
+import { Circle } from "react-konva"
 
 import { Point } from "../utils/Point"
-import { Tree } from "../models/gamefield"
+import { TreeSize } from "../models/tree"
 
 interface SpriteComponentProps extends Point {
-  tree: Tree
+  tree: TreeSize
 }
 
 export function SpriteComponent({ tree, ...props }: SpriteComponentProps) {
+  console.log(tree)
   switch (tree) {
-    case Tree.Small:
+    case TreeSize.Seed:
+      return <Seed {...props} />
+    case TreeSize.Small:
       return <SmallTree {...props} />
+    case TreeSize.Medium:
+      return <MediumTree {...props} />
+    case TreeSize.Large:
+      return <LargeTree {...props} />
     default:
       return null
   }
 }
+const Seed = (props: any) => <Circle radius={5} {...props} fill={"black"} />
 
 const SmallTree = (props: any) => (
   <Circle radius={10} {...props} fill={"black"} />
+)
+
+const MediumTree = (props: any) => (
+  <Circle radius={15} {...props} fill={"black"} />
+)
+
+const LargeTree = (props: any) => (
+  <Circle radius={20} {...props} fill={"black"} />
 )

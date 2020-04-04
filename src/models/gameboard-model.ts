@@ -1,13 +1,13 @@
 import { defineGrid, extendHex, Hex, PointLike } from "honeycomb-grid"
 
-import { Gamefield } from "./gamefield"
+import { Tree } from "./tree"
 
 export class GameboardModel {
   readonly grid: any
   readonly fields: any
 
   constructor() {
-    const Hex = extendHex({ props: new Gamefield() })
+    const Hex = extendHex()
     this.grid = defineGrid(Hex).hexagon({ radius: 3 })
 
     this.grid.forEach((el: any, i: number) => {
@@ -22,14 +22,11 @@ export class GameboardModel {
           y: hex.y * offset + center.y,
         }
       }
+      el.tree = new Tree()
     })
   }
 
-  getCenter() {
-    return this.grid.get([0, 0])
-  }
-
-  getDistanceFromCenterFieldByIndex(i: number) {
+  private getDistanceFromCenterFieldByIndex(i: number) {
     const centerHex = extendHex()(0, 0)
     return this.grid[i].distance(centerHex)
   }

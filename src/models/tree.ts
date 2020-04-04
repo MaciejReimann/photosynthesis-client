@@ -1,4 +1,4 @@
-export enum Tree {
+export enum TreeSize {
   Empty = "empty",
   Seed = "seed",
   Small = "small tree",
@@ -6,25 +6,26 @@ export enum Tree {
   Large = "large tree",
 }
 
-export class Gamefield {
+export class Tree {
   readonly growCycle: any
   private index: number
 
   constructor() {
     this.index = 0
     this.growCycle = [
-      Tree.Empty,
-      Tree.Seed,
-      Tree.Small,
-      Tree.Medium,
-      Tree.Medium,
+      TreeSize.Empty,
+      TreeSize.Seed,
+      TreeSize.Small,
+      TreeSize.Medium,
+      TreeSize.Large,
     ]
   }
   grow() {
-    this.index += this.index
+    if (this.index === this.growCycle.length - 1) return (this.index = 0)
+    this.index = this.index + 1
   }
 
-  getTree() {
+  get() {
     return this.growCycle[this.index]
   }
 }

@@ -13,9 +13,15 @@ interface GameboardProps {
   config: GameboardConfig
   sunPosition: SunPosition
   gameboard: any
+  onClick: any
 }
 
-export function Gameboard({ config, sunPosition, gameboard }: GameboardProps) {
+export function Gameboard({
+  config,
+  sunPosition,
+  gameboard,
+  onClick,
+}: GameboardProps) {
   const { center, gamefield, colors } = config
 
   console.log(gameboard.grid)
@@ -27,7 +33,10 @@ export function Gameboard({ config, sunPosition, gameboard }: GameboardProps) {
         const distanceFromCenter = field.getDistanceFromCenterField()
         const fieldCenter = field.getOffsetFromCenter(offset, center)
 
-        console.log(field.props.getTree())
+        const onFieldClick = (i: number) => {
+          field.tree.grow()
+          onClick()
+        }
 
         return (
           <GameboardField
@@ -37,11 +46,12 @@ export function Gameboard({ config, sunPosition, gameboard }: GameboardProps) {
             x={fieldCenter.x}
             y={fieldCenter.y}
             key={`${field.x}${i}`}
+            onClick={() => onFieldClick(i)}
           >
             <SpriteComponent
-              tree={field.props.getTree()}
-              x={field.x + center.x}
-              y={field.y + center.y}
+              tree={field.tree.get()}
+              x={fieldCenter.x}
+              y={fieldCenter.y}
             />
           </GameboardField>
         )
