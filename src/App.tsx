@@ -17,7 +17,12 @@ function App() {
 
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
-  // console.log(counter)
+
+  const stringifiedGame = JSON.stringify(game)
+  const parsedGame = JSON.parse(stringifiedGame)
+
+  // console.log("stringifiedGame", stringifiedGame)
+  // console.log("parsedGame", parsedGame)
 
   return (
     <div className="App">
