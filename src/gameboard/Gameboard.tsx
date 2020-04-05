@@ -2,16 +2,15 @@ import React from "react"
 import { Layer } from "react-konva"
 
 import { GameboardConfig } from "../config/gameboardConfig"
+import { SunPosition } from "../models/sun"
 import { GameboardField } from "./GameboardField"
 import { SpriteComponent } from "./SpriteComponent"
-
-export enum SunPosition {
-  West = "west",
-}
+import { Sun } from "./Sun"
 
 interface GameboardProps {
   config: GameboardConfig
   sunPosition: SunPosition
+  shadowDirection: SunPosition
   gameboard: any
   onClick: any
 }
@@ -19,12 +18,13 @@ interface GameboardProps {
 export function Gameboard({
   config,
   sunPosition,
+  shadowDirection,
   gameboard,
   onClick,
 }: GameboardProps) {
   const { center, gamefield, colors } = config
 
-  console.log(gameboard.grid)
+  console.log("sunPosition", sunPosition)
 
   return (
     <Layer>
@@ -38,14 +38,40 @@ export function Gameboard({
           onClick()
         }
 
-        return (
+        const isSun = () => {
+          const fieldOnSunnyBorder = hasNoNeighbourInDirection(
+            field,
+            sunPosition
+          )
+          // const neighbours = gameboard.grid
+          //   .neighborsOf(field)
+          //   .filter((f: any) => f !== undefined)
+          fieldOnSunnyBorder && console.log(fieldOnSunnyBorder)
+
+          return fieldOnSunnyBorder && fieldOnSunnyBorder.distance(field) === 0
+        }
+
+        const hasNoNeighbourInDirection = (
+          field: any,
+          direction: SunPosition
+        ) => {
+          const neighbour = gameboard.grid.neighborsOf(field, direction)[0]
+          if (neighbour === undefined) {
+            return field || null
+          }
+          hasNoNeighbourInDirection(neighbour, direction)
+        }
+
+        const getKey = () => `${field.x}${i}`
+
+        return distanceFromCenter < 4 ? (
           <GameboardField
             opacity={0.5 + 1 / (distanceFromCenter + 1)}
             fill={colors.background[distanceFromCenter]}
             radius={gamefield.radius}
             x={fieldCenter.x}
             y={fieldCenter.y}
-            key={`${field.x}${i}`}
+            key={getKey()}
             onClick={() => onFieldClick(i)}
           >
             <SpriteComponent
@@ -54,6 +80,8 @@ export function Gameboard({
               y={fieldCenter.y}
             />
           </GameboardField>
+        ) : (
+          isSun() && <Sun x={fieldCenter.x} y={fieldCenter.y} key={getKey()} />
         )
       })}
     </Layer>
