@@ -20,13 +20,16 @@ export class TreeModel {
       TreeSize.Large,
     ]
   }
-  grow() {
-    if (this.index === this.growCycle.length - 1) return (this.index = 0)
+  grow(): void {
+    if (this.index === this.growCycle.length - 1) {
+      this.index = 0
+      return
+    }
     this.index = this.index + 1
     console.log("growing tree", this.get())
   }
 
-  get() {
+  get(): TreeSize {
     return this.growCycle[this.index]
   }
 }

@@ -9,6 +9,8 @@ import { GameboardModel } from "./models/gameboard-model"
 import { Gameboard } from "./components/gameboard/Gameboard"
 import { Point } from "./utils/Point"
 
+import { GameStateSerializer } from "./serializers/game-serializer"
+
 import styles from "./UserLayout.module.scss"
 
 import {
@@ -35,11 +37,13 @@ function App() {
     gameboard
   )
 
-  // const stringifiedGame = JSON.stringify(game)
-  // const parsedGame = JSON.parse(stringifiedGame)
+  const serializedGame = new GameStateSerializer(game).serialize()
 
-  // console.log("stringifiedGame", stringifiedGame)
-  // console.log("parsedGame", parsedGame)
+  const stringifiedGame = JSON.stringify(serializedGame)
+  const parsedGame = JSON.parse(stringifiedGame)
+
+  console.log("stringifiedGame", stringifiedGame)
+  console.log("parsedGame", parsedGame)
 
   return (
     <div className="App">
