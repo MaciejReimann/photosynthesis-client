@@ -16,10 +16,13 @@ export const colorsGradient = [
   GamefieldBackground.ThirdRow,
 ]
 
-export type GameboardConfig = {
-  center: Point
-  gamefield: GameboardFieldProps
-  colors: ColorsConfig
+export class GameConfig {
+  gamefieldConfig: GameboardFieldProps = { radius: 37, distance: 10 }
+  colorsConfig: ColorsConfig = { background: colorsGradient }
+
+  constructor(readonly center: Point) {
+    this.center = center
+  }
 }
 
 export type ColorsConfig = {

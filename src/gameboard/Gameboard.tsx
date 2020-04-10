@@ -1,17 +1,19 @@
 import React from "react"
 import { Layer } from "react-konva"
 
-import { GameboardConfig } from "../config/gameboardConfig"
-import { SunPosition } from "../models/sun"
+import { GameConfig } from "../config/gameboardConfig"
+import { SunPosition } from "../models/sun-model"
 import { GameboardField } from "./GameboardField"
 import { SpriteComponent } from "./SpriteComponent"
 import { SunRay } from "./SunRay"
 
+import { GamefieldViewController } from "../view-controllers/gamefield-view-controller"
+
 interface GameboardProps {
-  config: GameboardConfig
+  config: GameConfig
   sunPosition: SunPosition
   shadowDirection: SunPosition
-  gameboard: any
+  controller: any
   onClick: any
 }
 
@@ -19,47 +21,41 @@ export function Gameboard({
   config,
   sunPosition,
   shadowDirection,
-  gameboard,
+  controller,
   onClick,
 }: GameboardProps) {
-  const { center, gamefield, colors } = config
+  const { gamefieldConfig, colorsConfig } = config
+  const gameFields = controller.getGameFields()
 
   console.log("sunPosition", sunPosition)
 
   return (
     <Layer>
-      {gameboard.grid.map((field: any, i: number) => {
-        const offset = gamefield.radius + gamefield.distance
-        const ringIndex = field.ringIndex
-        const fieldCenter = field.getOffsetFromCenter(offset, center)
+      {gameFields.map((field: GamefieldViewController, i: number) => {
+        const distanceFromCenter = field.getDistanceFromCenter()
+        const fieldCenter = field.getCenterCoords()
 
-        const onFieldClick = (i: number) => {
-          field.tree.grow()
-          onClick()
-        }
+        const key = `${fieldCenter.x}${i}`
 
-        const getKey = () => `${field.x}${i}`
-
-        return field.tree ? (
+        return !field.isOnOuterRing() ? (
           <GameboardField
-            opacity={0.5 + 1 / (ringIndex + 1)}
-            fill={colors.background[ringIndex]}
-            radius={gamefield.radius}
+            opacity={0.5 + 1 / (distanceFromCenter + 1)}
+            fill={colorsConfig.background[distanceFromCenter]}
+            radius={gamefieldConfig.radius}
             x={fieldCenter.x}
             y={fieldCenter.y}
-            key={getKey()}
-            onClick={() => onFieldClick(i)}
+            key={key}
+            onClick={() => controller.onClickField(i)}
+            onMouseover={() => controller.onMouseoverField(i)}
           >
-            <SpriteComponent
+            {/* <SpriteComponent
               tree={field.tree.get()}
               x={fieldCenter.x}
               y={fieldCenter.y}
-            />
+            /> */}
           </GameboardField>
         ) : (
-          field.isSun(sunPosition) && (
-            <SunRay x={fieldCenter.x} y={fieldCenter.y} key={getKey()} />
-          )
+          <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
         )
       })}
     </Layer>

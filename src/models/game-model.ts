@@ -1,14 +1,14 @@
-import { Sun } from "./sun"
+import { SunModel } from "./sun-model"
 import { GameboardModel } from "./gameboard-model"
 
-export class Game {
+export class GameModel {
   round = 0
   board: GameboardModel
-  sun: Sun
+  sun: SunModel
 
   constructor() {
     this.board = new GameboardModel()
-    this.sun = new Sun()
+    this.sun = new SunModel()
   }
 
   nextRound() {

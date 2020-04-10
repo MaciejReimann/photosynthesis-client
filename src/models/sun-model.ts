@@ -7,7 +7,7 @@ export enum SunPosition {
   SE = "SE",
 }
 
-export class Sun {
+export class SunModel {
   sunPositions = [
     SunPosition.E,
     SunPosition.SE,

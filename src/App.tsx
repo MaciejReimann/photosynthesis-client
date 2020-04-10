@@ -1,50 +1,78 @@
 import React, { useState } from "react"
 import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
+// UI Components
 import { Button } from "./components/Button"
 
-import { colorsGradient } from "./config/gameboardConfig"
-import { Game } from "./models/game"
+import { GameModel } from "./models/game-model"
+import { GameboardModel } from "./models/gameboard-model"
 import { Gameboard } from "./gameboard/Gameboard"
 import { Point } from "./utils/Point"
 
-const game = new Game()
+import styles from "./UserLayout.module.scss"
+
+import {
+  GameboardViewController,
+  DisplayProperty,
+} from "./view-controllers/gameboard-view-controller"
+
+import { GameConfig } from "./config/gameboardConfig"
 
 function App() {
-  const width = window.innerWidth
-  const height = window.innerHeight
-  const center = new Point(width / 2, height / 2.5)
+  const { innerWidth, innerHeight } = window
+  const center = new Point(innerWidth / 2, innerHeight / 2.5)
 
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
 
-  const stringifiedGame = JSON.stringify(game)
-  const parsedGame = JSON.parse(stringifiedGame)
+  const defaultConfig = new GameConfig(center)
+
+  const game = new GameModel()
+  const gameboard = game.board
+
+  const gameboardViewController = new GameboardViewController(
+    defaultConfig,
+    gameboard
+  )
+
+  // const stringifiedGame = JSON.stringify(game)
+  // const parsedGame = JSON.parse(stringifiedGame)
 
   // console.log("stringifiedGame", stringifiedGame)
   // console.log("parsedGame", parsedGame)
 
   return (
     <div className="App">
-      <Stage width={width} height={height}>
+      <Stage width={innerWidth} height={innerHeight}>
         <Gameboard
-          config={{
-            center,
-            gamefield: { radius: 37, distance: 10 },
-            colors: { background: colorsGradient },
-          }}
+          config={defaultConfig}
           sunPosition={game.sun.getSunDirection()}
           shadowDirection={game.sun.getShadowDirection()}
-          gameboard={game.board}
+          controller={gameboardViewController}
           onClick={incrementCounter}
         />
       </Stage>
-      <Button
-        onClick={() => {
-          game.nextRound()
-          incrementCounter()
-        }}
-      />
+      <div className={styles.button1}>
+        <Button
+          onClick={() => {
+            game.nextRound()
+            incrementCounter()
+          }}
+        >
+          Next Round
+        </Button>
+      </div>
+      <div className={styles.button2}>
+        <Button
+          onClick={() => {
+            gameboardViewController.setDisplayProperty(
+              DisplayProperty.SeedableFields
+            )
+          }}
+        >
+          Seed
+        </Button>
+      </div>
     </div>
   )
 }
