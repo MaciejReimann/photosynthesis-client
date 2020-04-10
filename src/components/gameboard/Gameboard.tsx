@@ -1,13 +1,13 @@
 import React from "react"
 import { Layer } from "react-konva"
 
-import { GameConfig } from "../config/gameboardConfig"
-import { SunPosition } from "../models/sun-model"
+import { GameConfig } from "../../config/gameboardConfig"
+import { SunPosition } from "../../models/sun-model"
 import { GameboardField } from "./GameboardField"
 import { SpriteComponent } from "./SpriteComponent"
 import { SunRay } from "./SunRay"
 
-import { GamefieldViewController } from "../view-controllers/gamefield-view-controller"
+import { GamefieldViewController } from "../../view-controllers/gamefield-view-controller"
 
 interface GameboardProps {
   config: GameConfig
@@ -37,6 +37,11 @@ export function Gameboard({
 
         const key = `${fieldCenter.x}${i}`
 
+        const handleClick = () => {
+          controller.onClickField(i)
+          field.onClick()
+        }
+
         return !field.isOnOuterRing() ? (
           <GameboardField
             opacity={0.5 + 1 / (distanceFromCenter + 1)}
@@ -45,7 +50,7 @@ export function Gameboard({
             x={fieldCenter.x}
             y={fieldCenter.y}
             key={key}
-            onClick={() => controller.onClickField(i)}
+            onClick={handleClick}
             onMouseover={() => controller.onMouseoverField(i)}
           >
             {/* <SpriteComponent

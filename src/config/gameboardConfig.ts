@@ -1,6 +1,6 @@
 import { Point } from "../utils/Point"
 
-import { GameboardFieldProps } from "../gameboard/GameboardField"
+import { GameboardFieldProps } from "../components/gameboard/GameboardField"
 
 enum GamefieldBackground {
   Center = "#2a5413",

@@ -1,8 +1,8 @@
 import React from "react"
 import { Circle } from "react-konva"
 
-import { Point } from "../utils/Point"
-import { TreeSize } from "../models/tree"
+import { Point } from "../../utils/Point"
+import { TreeSize } from "../../models/tree-model"
 
 interface SpriteComponentProps extends Point {
   tree: TreeSize

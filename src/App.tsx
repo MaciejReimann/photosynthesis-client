@@ -6,7 +6,7 @@ import { Button } from "./components/Button"
 
 import { GameModel } from "./models/game-model"
 import { GameboardModel } from "./models/gameboard-model"
-import { Gameboard } from "./gameboard/Gameboard"
+import { Gameboard } from "./components/gameboard/Gameboard"
 import { Point } from "./utils/Point"
 
 import styles from "./UserLayout.module.scss"

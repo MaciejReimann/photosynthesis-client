@@ -1,7 +1,7 @@
-type GamefieldDistances = 0 | 2 | 3 | 4
+import { GamefieldModel, GamefieldDistances } from "../models/gamefield-model"
 
 export class GamefieldViewController {
-  constructor(readonly field: any, readonly center: any) {
+  constructor(readonly field: GamefieldModel, readonly center: any) {
     this.field = field
     this.center = center
   }
@@ -16,5 +16,9 @@ export class GamefieldViewController {
 
   isOnOuterRing(): boolean {
     return this.getDistanceFromCenter() > 3
+  }
+
+  onClick(): void {
+    this.field.growTree()
   }
 }

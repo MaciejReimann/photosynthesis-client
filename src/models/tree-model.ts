@@ -6,7 +6,7 @@ export enum TreeSize {
   Large = "large tree",
 }
 
-export class Tree {
+export class TreeModel {
   readonly growCycle: any
   private index: number
 
@@ -23,6 +23,7 @@ export class Tree {
   grow() {
     if (this.index === this.growCycle.length - 1) return (this.index = 0)
     this.index = this.index + 1
+    console.log("growing tree", this.get())
   }
 
   get() {

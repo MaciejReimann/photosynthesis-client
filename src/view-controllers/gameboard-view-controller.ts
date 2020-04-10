@@ -1,4 +1,6 @@
 import { GameConfig } from "../config/gameboardConfig"
+import { HexGrid } from "../models/gameboard-model"
+import { GamefieldModel } from "../models/gamefield-model"
 import { GamefieldViewController } from "./gamefield-view-controller"
 
 export enum DisplayProperty {
@@ -6,11 +8,19 @@ export enum DisplayProperty {
 }
 
 export class GameboardViewController {
+  readonly hexGrid: HexGrid
+  readonly gamefields: GamefieldViewController[]
   private isSeedableFieldsSelected: boolean
 
-  constructor(readonly config: GameConfig, readonly gameboard: any) {
+  constructor(readonly config: GameConfig, gameboard: any) {
     this.config = config
-    this.gameboard = gameboard
+    this.hexGrid = gameboard.getHexGrid()
+    this.gamefields = gameboard
+      .getGamefields()
+      .map(
+        (field: GamefieldModel, i: number) =>
+          new GamefieldViewController(field, this.getOffsetFromCenter(i))
+      )
     this.isSeedableFieldsSelected = false
   }
 
@@ -24,16 +34,11 @@ export class GameboardViewController {
   // getters
 
   getGameFields(): GamefieldViewController[] {
-    return this.gameboard
-      .getGamefields()
-      .map(
-        (field: any, i: number) =>
-          new GamefieldViewController(field, this.getOffsetFromCenter(i))
-      )
+    return this.gamefields
   }
 
   getHexGrid() {
-    return this.gameboard.getHexGrid()
+    return this.hexGrid
   }
 
   // event handlers
@@ -52,7 +57,7 @@ export class GameboardViewController {
   // helpers
   private getOffsetFromCenter(fieldIndex: number) {
     const { gamefieldConfig, center } = this.config
-    const field = this.getHexGrid()[fieldIndex].toPoint()
+    const field = this.hexGrid[fieldIndex].toPoint()
 
     const offsetValue = gamefieldConfig.radius + gamefieldConfig.distance
 
