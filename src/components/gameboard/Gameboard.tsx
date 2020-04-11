@@ -35,7 +35,9 @@ export function Gameboard({
         const distanceFromCenter = field.getDistanceFromCenter()
         const fieldCenter = field.getCenterCoords()
         const tree = field.getTree()
-        console.log("tree", tree)
+        const opacity = field.isDesaturated ? 0.5 : 1
+
+        console.log("opacity", opacity)
 
         const key = `${fieldCenter.x}${i}`
 
@@ -45,11 +47,9 @@ export function Gameboard({
           onClick()
         }
 
-        const getOpacity = () => 0.5 + 1 / (distanceFromCenter + 1)
-
         return !field.isOnOuterRing() ? (
           <GameboardField
-            opacity={1}
+            opacity={opacity}
             fill={colorsConfig.background[distanceFromCenter]}
             radius={gamefieldConfig.radius}
             x={fieldCenter.x}

@@ -1,6 +1,8 @@
 import { GameConfig } from "../config/gameboardConfig"
+
 import { HexGrid } from "../models/gameboard-model"
 import { GamefieldModel } from "../models/gamefield-model"
+
 import { GamefieldViewController } from "./gamefield-view-controller"
 
 export enum DisplayProperty {
@@ -10,13 +12,15 @@ export enum DisplayProperty {
 
 export class GameboardViewController {
   readonly hexGrid: HexGrid
-  readonly gamefields: GamefieldViewController[]
+  readonly gamefieldControllers: GamefieldViewController[]
+  readonly gemeboardModel: any
   private isSeedableFieldsSelected: boolean
 
-  constructor(readonly config: GameConfig, gameboard: any) {
+  constructor(readonly config: GameConfig, gameboardModel: any) {
     this.config = config
-    this.hexGrid = gameboard.getHexGrid()
-    this.gamefields = gameboard
+    this.hexGrid = gameboardModel.getHexGrid()
+    this.gemeboardModel = gameboardModel
+    this.gamefieldControllers = gameboardModel
       .getGamefields()
       .map(
         (field: GamefieldModel, i: number) =>
@@ -32,10 +36,20 @@ export class GameboardViewController {
       this.isSeedableFieldsSelected = true
   }
 
+  highlightSeedableFields(): void {
+    console.log("higlighting seedable fields")
+
+    this.gamefieldControllers.forEach((gamefield) => {
+      const isSeedable = this.isGamefieldSeedable(gamefield.getId())
+      isSeedable && console.log(gamefield.getId())
+      !this.isGamefieldSeedable(gamefield.getId()) && gamefield.desaturate()
+    })
+  }
+
   // getters
 
   getGameFields(): GamefieldViewController[] {
-    return this.gamefields
+    return this.gamefieldControllers
   }
 
   getHexGrid() {
@@ -56,6 +70,13 @@ export class GameboardViewController {
   }
 
   // helpers
+
+  private isGamefieldSeedable(id: number): boolean {
+    const seedableFieldsIds = this.gemeboardModel.getSeedableFieldsIds()
+    console.log("seedableFieldsIds", seedableFieldsIds)
+    return seedableFieldsIds.includes(id)
+  }
+
   private getOffsetFromCenter(fieldIndex: number) {
     const { gamefieldConfig, center } = this.config
     const field = this.hexGrid[fieldIndex].toPoint()

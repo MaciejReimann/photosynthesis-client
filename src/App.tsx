@@ -21,20 +21,18 @@ import {
 import { GameConfig } from "./config/gameboardConfig"
 
 const game = new GameModel()
+const { innerWidth, innerHeight } = window
+const center = new Point(innerWidth / 2, innerHeight / 2.5)
+const defaultConfig = new GameConfig(center)
+
+const gameboardViewController = new GameboardViewController(
+  defaultConfig,
+  game.board
+)
 
 function App() {
-  const { innerWidth, innerHeight } = window
-  const center = new Point(innerWidth / 2, innerHeight / 2.5)
-
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
-
-  const defaultConfig = new GameConfig(center)
-
-  const gameboardViewController = new GameboardViewController(
-    defaultConfig,
-    game.board
-  )
 
   const serializedGame = new GameStateSerializer(game).serialize()
 
@@ -68,9 +66,8 @@ function App() {
       <div className={styles.button2}>
         <Button
           onClick={() => {
-            gameboardViewController.setDisplayProperty(
-              DisplayProperty.SeedableFields
-            )
+            gameboardViewController.highlightSeedableFields()
+            incrementCounter()
           }}
         >
           Seed
@@ -82,6 +79,7 @@ function App() {
             gameboardViewController.setDisplayProperty(
               DisplayProperty.SeedableFields
             )
+            incrementCounter()
           }}
         >
           Small Tree
