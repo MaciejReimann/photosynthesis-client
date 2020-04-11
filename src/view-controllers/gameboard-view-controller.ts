@@ -1,5 +1,7 @@
-import { GameConfig } from "../config/gameboardConfig"
+import { GameConfig, GamefieldBackground } from "../config/gameboardConfig"
 
+import { Point } from "../models/point-model"
+import { GameboardModel } from "../models/gameboard-model"
 import { GamefieldModel } from "../models/gamefield-model"
 import { mapFertilityIndexToDistanceFromCenter } from "../models/utils"
 
@@ -14,11 +16,11 @@ export enum DisplayProperty {
 }
 
 export class GameboardViewController {
-  readonly gamefieldControllers: GamefieldViewController[]
-  readonly gemeboardModel: any
+  readonly gamefieldControllers: (GamefieldViewController | SunRayDisplay)[]
+  readonly gemeboardModel: GameboardModel
   private isSeedableFieldsSelected: boolean
 
-  constructor(readonly config: GameConfig, gameboardModel: any) {
+  constructor(readonly config: GameConfig, gameboardModel: GameboardModel) {
     this.config = config
     this.gemeboardModel = gameboardModel
     this.gamefieldControllers = this.buildGamefieldsControllers(
@@ -40,9 +42,11 @@ export class GameboardViewController {
     console.log("higlighting seedable fields")
 
     this.gamefieldControllers.forEach((gamefield) => {
-      const isSeedable = this.isGamefieldSeedable(gamefield.getId())
+      if (gamefield instanceof GamefieldViewController) {
+        const isSeedable = this.isGamefieldSeedable(gamefield.getId())
 
-      !isSeedable && gamefield.desaturate()
+        !isSeedable && gamefield.desaturate()
+      }
     })
   }
 
@@ -52,7 +56,7 @@ export class GameboardViewController {
     return this.config.gamefieldConfig.radius
   }
 
-  getGameFields(): GamefieldViewController[] {
+  getGameFields(): (GamefieldViewController | SunRayDisplay)[] {
     return this.gamefieldControllers
   }
 
@@ -71,13 +75,16 @@ export class GameboardViewController {
 
   // helpers
 
-  private getFieldColor(config: GameConfig, fieldModel: GamefieldModel) {
+  private getFieldColor(
+    config: GameConfig,
+    fieldModel: GamefieldModel
+  ): GamefieldBackground {
     const distanceFromCenter = this.getDistanceFromCenter(fieldModel)
     return config.colorsConfig.background[distanceFromCenter]
   }
 
   private getDistanceFromCenter(fieldModel: GamefieldModel): number {
-    return mapFertilityIndexToDistanceFromCenter(fieldModel.fertilityIndex)
+    return mapFertilityIndexToDistanceFromCenter(fieldModel.fertility)
   }
 
   private isGamefieldSeedable(id: number): boolean {
@@ -86,19 +93,22 @@ export class GameboardViewController {
     return seedableFieldsIds.includes(id)
   }
 
-  private getOffsetFromCenter(fieldIndex: number) {
+  private getOffsetFromCenter(fieldIndex: number): Point {
     const { gamefieldConfig, center } = this.config
     const field = this.gemeboardModel.getHexCoordsById(fieldIndex).toPoint()
 
     const offsetValue = gamefieldConfig.radius + gamefieldConfig.distance
 
-    return {
-      x: field.x * offsetValue + center.x,
-      y: field.y * offsetValue + center.y,
-    }
+    const x = field.x * offsetValue + center.x
+    const y = field.y * offsetValue + center.y
+
+    return new Point(x, y)
   }
 
-  private buildGamefieldsControllers(config: GameConfig, gameboardModel: any) {
+  private buildGamefieldsControllers(
+    config: GameConfig,
+    gameboardModel: any
+  ): (GamefieldViewController | SunRayDisplay)[] {
     return gameboardModel
       .getGamefields()
       .map((field: GamefieldModel, i: number) => {

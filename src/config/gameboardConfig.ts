@@ -2,7 +2,7 @@ import { Point } from "../utils/Point"
 
 import { GameboardFieldProps } from "../components/gameboard/GameboardField"
 
-enum GamefieldBackground {
+export enum GamefieldBackground {
   Center = ` rgba(80, 107, 32, 1)`,
   FirstRow = ` rgba(125, 145, 52, 1)`,
   SecondRow = `rgba(162, 168, 82, 1)`,
@@ -27,7 +27,7 @@ export class GameConfig {
 }
 
 export type ColorsConfig = {
-  background: string[]
+  background: GamefieldBackground[]
 }
 
 export const defaultConfig = {}

@@ -1,13 +1,10 @@
 import { TreeModel, TreeSize } from "./tree-model"
 
-export type CubicCoords = { q: number; r: number; s: number }
-export type CartesianCoords = { x: number; y: number }
-export type HexCoords = CubicCoords & CartesianCoords
 export type GamefieldDistance = 0 | 1 | 2 | 3
 export type FertilityIndex = 4 | 3 | 2 | 1
 
 export type GamefieldModelConfig = {
-  fertilityIndex: FertilityIndex
+  fertility: FertilityIndex
 } & BasicModelConfig
 
 export type BasicModelConfig = {
@@ -22,13 +19,13 @@ export class BasicFieldModel {
 }
 export class GamefieldModel {
   readonly id: number
-  readonly fertilityIndex: FertilityIndex
+  readonly fertility: FertilityIndex
   readonly tree: TreeModel
   hasBeenTouched = false
 
   constructor(config: GamefieldModelConfig) {
     this.id = config.id
-    this.fertilityIndex = config.fertilityIndex
+    this.fertility = config.fertility
     this.tree = new TreeModel()
   }
 
@@ -46,7 +43,7 @@ export class GamefieldModel {
   // getters
 
   getFertility(): FertilityIndex {
-    return this.fertilityIndex
+    return this.fertility
   }
 
   isEmpty(): boolean {

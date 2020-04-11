@@ -7,7 +7,7 @@ export enum TreeSize {
 }
 
 export class TreeModel {
-  readonly growCycle: any
+  readonly growCycle: TreeSize[]
   private index: number
 
   constructor() {

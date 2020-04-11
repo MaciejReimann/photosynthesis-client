@@ -17,7 +17,7 @@ export class GameModel {
     this.incrementRound()
   }
 
-  private incrementRound() {
+  private incrementRound(): void {
     this.round++
   }
 }

@@ -26,7 +26,7 @@ export class SunModel {
   ]
   currentIndex = 0
 
-  rotate() {
+  rotate(): void {
     if (this.currentIndex === this.sunPositions.length - 1) {
       this.currentIndex = 0
       return
@@ -34,11 +34,11 @@ export class SunModel {
     this.currentIndex++
   }
 
-  getSunDirection() {
+  getSunDirection(): SunPosition {
     return this.sunPositions[this.currentIndex]
   }
 
-  getShadowDirection() {
+  getShadowDirection(): SunPosition {
     return this.shadowDirections[this.currentIndex]
   }
 }
