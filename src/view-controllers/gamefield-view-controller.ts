@@ -1,16 +1,36 @@
-import { GamefieldModel, GamefieldDistance } from "../models/gamefield-model"
+import {
+  BasicFieldModel,
+  GamefieldModel,
+  GamefieldDistance,
+} from "../models/gamefield-model"
 import { TreeSize } from "../models/tree-model"
 
-enum GemefieldDisplayProperties {
-  Default = "default",
-  Desaturated = "desaturated",
+import { mapFertilityIndexToDistanceFromCenter } from "../models/utils"
+
+export class SunRayDisplay {
+  constructor(
+    readonly fieldModel: BasicFieldModel,
+    readonly center: any,
+    readonly color: any
+  ) {
+    this.fieldModel = fieldModel
+    this.center = center
+  }
+
+  getCenterCoords() {
+    return this.center
+  }
 }
 
 export class GamefieldViewController {
   public isDesaturated: boolean
 
-  constructor(readonly field: GamefieldModel, readonly center: any) {
-    this.field = field
+  constructor(
+    readonly fieldModel: GamefieldModel,
+    readonly center: any,
+    readonly color: any
+  ) {
+    this.fieldModel = fieldModel
     this.center = center
     this.isDesaturated = false
   }
@@ -18,27 +38,28 @@ export class GamefieldViewController {
   // setters
 
   desaturate() {
-    console.log("DESATURATING!!!!", this.field.id)
-
     this.isDesaturated = true
   }
 
   // getters
   getId(): number {
-    return this.field.id
+    return this.fieldModel.id
   }
 
   getCenterCoords() {
     return this.center
   }
 
+  getColor() {
+    return this.color
+  }
+
   getOpacity(): number {
-    console.log("getOpacity this.isDesaturated", this.isDesaturated)
     return this.isDesaturated ? 0.5 : 1
   }
 
   getDistanceFromCenter(): GamefieldDistance {
-    return this.field.getDistanceFromCenter()
+    return mapFertilityIndexToDistanceFromCenter(this.fieldModel.fertilityIndex)
   }
 
   isOnOuterRing(): boolean {
@@ -46,10 +67,10 @@ export class GamefieldViewController {
   }
 
   getTree(): TreeSize {
-    return this.field.getTree()
+    return this.fieldModel.getTree()
   }
 
   onClick(): void {
-    this.field.growTree()
+    this.fieldModel.growTree()
   }
 }

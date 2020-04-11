@@ -6,30 +6,30 @@ export type HexCoords = CubicCoords & CartesianCoords
 export type GamefieldDistance = 0 | 1 | 2 | 3
 export type FertilityIndex = 4 | 3 | 2 | 1
 
-export type GamefieldExtraProps = {
-  id: number
-  distanceFromCenter: GamefieldDistance
+export type GamefieldModelConfig = {
   fertilityIndex: FertilityIndex
-  //   cartesianOffsetFromCenter: CartesianCoords
-}
+} & BasicModelConfig
 
+export type BasicModelConfig = {
+  id: number
+}
+export class BasicFieldModel {
+  readonly id: number
+
+  constructor(config: BasicModelConfig) {
+    this.id = config.id
+  }
+}
 export class GamefieldModel {
   readonly id: number
-  readonly distanceFromCenter: GamefieldDistance
   readonly fertilityIndex: FertilityIndex
   readonly tree: TreeModel
   hasBeenTouched = false
 
-  constructor(
-    readonly coords: HexCoords,
-    readonly extraProps: GamefieldExtraProps // readonly gridModel: any
-  ) {
-    this.coords = coords
-    this.id = extraProps.id
-    this.distanceFromCenter = extraProps.distanceFromCenter
-    this.fertilityIndex = extraProps.fertilityIndex
+  constructor(config: GamefieldModelConfig) {
+    this.id = config.id
+    this.fertilityIndex = config.fertilityIndex
     this.tree = new TreeModel()
-    // this.gridModel = gridModel
   }
 
   // setters
@@ -45,8 +45,8 @@ export class GamefieldModel {
 
   // getters
 
-  getDistanceFromCenter(): GamefieldDistance {
-    return this.distanceFromCenter
+  getFertility(): FertilityIndex {
+    return this.fertilityIndex
   }
 
   isEmpty(): boolean {
@@ -57,13 +57,27 @@ export class GamefieldModel {
     return !this.isEmpty() && !this.hasSeed()
   }
 
+  getSeedableRange(): number {
+    const tree = this.getTree()
+    switch (tree) {
+      case TreeSize.Small:
+        return 1
+      case TreeSize.Medium:
+        return 2
+      case TreeSize.Large:
+        return 3
+      default:
+        return 0
+    }
+  }
+
   getTree(): TreeSize {
     return this.tree.get()
   }
 
   serialize(): SerializedGamefield {
-    const coords = this.coords
-    return this.isEmpty() ? { coords } : { coords, tree: this.getTree() }
+    const id = this.id
+    return this.isEmpty() ? { id } : { id, tree: this.getTree() }
   }
 
   private hasSeed(): boolean {
@@ -72,6 +86,6 @@ export class GamefieldModel {
 }
 
 export type SerializedGamefield = {
-  coords: HexCoords
+  id: number
   tree?: TreeSize
 }

@@ -34,10 +34,10 @@ function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
 
-  const serializedGame = new GameStateSerializer(game).serialize()
+  // const serializedGame = new GameStateSerializer(game).serialize()
 
-  const stringifiedGame = JSON.stringify(serializedGame)
-  const parsedGame = JSON.parse(stringifiedGame)
+  // const stringifiedGame = JSON.stringify(serializedGame)
+  // const parsedGame = JSON.parse(stringifiedGame)
 
   // console.log("stringifiedGame", stringifiedGame)
   // console.log("parsedGame", parsedGame)

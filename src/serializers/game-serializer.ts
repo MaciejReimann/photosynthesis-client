@@ -8,15 +8,15 @@ export class GameStateSerializer {
     this.gameModel = gameModel
   }
 
-  serialize(): SerializedGameState {
-    return {
-      round: this.gameModel.round,
-      gamefields: this.gameModel.board
-        .getGamefields()
-        .map((field: GamefieldModel) => field.serialize()),
-      sun: this.gameModel.sun.getSunDirection(),
-    }
-  }
+  // serialize(): SerializedGameState {
+  //   return {
+  //     round: this.gameModel.round,
+  //     gamefields: this.gameModel.board
+  //       .getGamefields()
+  //       .map((f) => f instanceof GamefieldModel && f.serialize()),
+  //     sun: this.gameModel.sun.getSunDirection(),
+  //   }
+  // }
 }
 
 export type SerializedGameState = {

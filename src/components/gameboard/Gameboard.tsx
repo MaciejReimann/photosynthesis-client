@@ -7,7 +7,10 @@ import { GameboardField } from "./GameboardField"
 import { SpriteComponent } from "./SpriteComponent"
 import { SunRay } from "./SunRay"
 
-import { GamefieldViewController } from "../../view-controllers/gamefield-view-controller"
+import {
+  SunRayDisplay,
+  GamefieldViewController,
+} from "../../view-controllers/gamefield-view-controller"
 
 interface GameboardProps {
   config: GameConfig
@@ -24,46 +27,50 @@ export function Gameboard({
   controller,
   onClick,
 }: GameboardProps) {
-  const { gamefieldConfig, colorsConfig } = config
+  const { gamefieldConfig } = config
   const gameFields = controller.getGameFields()
-
-  // console.log("sunPosition", sunPosition)
 
   return (
     <Layer>
-      {gameFields.map((field: GamefieldViewController, i: number) => {
-        const distanceFromCenter = field.getDistanceFromCenter()
-        const fieldCenter = field.getCenterCoords()
-        const tree = field.getTree()
-        const opacity = field.isDesaturated ? 0.5 : 1
+      {gameFields.map(
+        (field: GamefieldViewController | SunRayDisplay, i: number) => {
+          const fieldCenter = field.getCenterCoords()
+          const key = `${fieldCenter.x}${i}`
 
-        console.log("opacity", opacity)
+          if (field instanceof GamefieldViewController) {
+            const opacity = field.getOpacity()
+            const color = field.getColor()
+            const tree = field.getTree()
 
-        const key = `${fieldCenter.x}${i}`
+            const handleClick = () => {
+              controller.onClickField(i)
+              field.onClick()
+              onClick()
+            }
 
-        const handleClick = () => {
-          controller.onClickField(i)
-          field.onClick()
-          onClick()
+            return (
+              <GameboardField
+                opacity={opacity}
+                fill={color}
+                radius={gamefieldConfig.radius}
+                x={fieldCenter.x}
+                y={fieldCenter.y}
+                key={key}
+                onClick={handleClick}
+                onMouseover={() => controller.onMouseoverField(i)}
+              >
+                <SpriteComponent
+                  tree={tree}
+                  x={fieldCenter.x}
+                  y={fieldCenter.y}
+                />
+              </GameboardField>
+            )
+          } else {
+            return <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
+          }
         }
-
-        return !field.isOnOuterRing() ? (
-          <GameboardField
-            opacity={opacity}
-            fill={colorsConfig.background[distanceFromCenter]}
-            radius={gamefieldConfig.radius}
-            x={fieldCenter.x}
-            y={fieldCenter.y}
-            key={key}
-            onClick={handleClick}
-            onMouseover={() => controller.onMouseoverField(i)}
-          >
-            <SpriteComponent tree={tree} x={fieldCenter.x} y={fieldCenter.y} />
-          </GameboardField>
-        ) : (
-          <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
-        )
-      })}
+      )}
     </Layer>
   )
 }
