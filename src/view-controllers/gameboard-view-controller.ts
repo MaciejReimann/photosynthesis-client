@@ -48,6 +48,10 @@ export class GameboardViewController {
 
   // getters
 
+  getGameboardRadius(): number {
+    return this.config.gamefieldConfig.radius
+  }
+
   getGameFields(): GamefieldViewController[] {
     return this.gamefieldControllers
   }

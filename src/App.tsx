@@ -46,7 +46,6 @@ function App() {
     <div className="App">
       <Stage width={innerWidth} height={innerHeight}>
         <Gameboard
-          config={defaultConfig}
           sunPosition={game.sun.getSunDirection()}
           shadowDirection={game.sun.getShadowDirection()}
           controller={gameboardViewController}

@@ -1,19 +1,18 @@
 import React from "react"
 import { Layer } from "react-konva"
 
-import { GameConfig } from "../../config/gameboardConfig"
 import { SunPosition } from "../../models/sun-model"
-import { GameboardField } from "./GameboardField"
-import { SpriteComponent } from "./SpriteComponent"
-import { SunRay } from "./SunRay"
 
 import {
   SunRayDisplay,
   GamefieldViewController,
 } from "../../view-controllers/gamefield-view-controller"
 
+import { GameboardField } from "./GameboardField"
+import { SpriteComponent } from "./SpriteComponent"
+import { SunRay } from "./SunRay"
+
 interface GameboardProps {
-  config: GameConfig
   sunPosition: SunPosition
   shadowDirection: SunPosition
   controller: any
@@ -21,27 +20,20 @@ interface GameboardProps {
 }
 
 export function Gameboard({
-  config,
   sunPosition,
   shadowDirection,
   controller,
   onClick,
 }: GameboardProps) {
-  const { gamefieldConfig } = config
-  const gameFields = controller.getGameFields()
-
   return (
     <Layer>
-      {gameFields.map(
-        (field: GamefieldViewController | SunRayDisplay, i: number) => {
+      {controller
+        .getGameFields()
+        .map((field: GamefieldViewController | SunRayDisplay, i: number) => {
           const fieldCenter = field.getCenterCoords()
           const key = `${fieldCenter.x}${i}`
 
           if (field instanceof GamefieldViewController) {
-            const opacity = field.getOpacity()
-            const color = field.getColor()
-            const tree = field.getTree()
-
             const handleClick = () => {
               controller.onClickField(i)
               field.onClick()
@@ -50,9 +42,9 @@ export function Gameboard({
 
             return (
               <GameboardField
-                opacity={opacity}
-                fill={color}
-                radius={gamefieldConfig.radius}
+                opacity={field.getOpacity()}
+                fill={field.getColor()}
+                radius={controller.getGameboardRadius()}
                 x={fieldCenter.x}
                 y={fieldCenter.y}
                 key={key}
@@ -60,7 +52,7 @@ export function Gameboard({
                 onMouseover={() => controller.onMouseoverField(i)}
               >
                 <SpriteComponent
-                  tree={tree}
+                  tree={field.getTree()}
                   x={fieldCenter.x}
                   y={fieldCenter.y}
                 />
@@ -69,8 +61,7 @@ export function Gameboard({
           } else {
             return <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
           }
-        }
-      )}
+        })}
     </Layer>
   )
 }
