@@ -1,4 +1,5 @@
 import { GamefieldModel, GamefieldDistances } from "../models/gamefield-model"
+import { TreeSize } from "../models/tree-model"
 
 export class GamefieldViewController {
   constructor(readonly field: GamefieldModel, readonly center: any) {
@@ -16,6 +17,10 @@ export class GamefieldViewController {
 
   isOnOuterRing(): boolean {
     return this.getDistanceFromCenter() > 3
+  }
+
+  getTree(): TreeSize {
+    return this.field.getTree()
   }
 
   onClick(): void {

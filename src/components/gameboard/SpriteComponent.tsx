@@ -9,7 +9,7 @@ interface SpriteComponentProps extends Point {
 }
 
 export function SpriteComponent({ tree, ...props }: SpriteComponentProps) {
-  console.log(tree)
+  // console.log(tree)
   switch (tree) {
     case TreeSize.Seed:
       return <Seed {...props} />

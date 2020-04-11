@@ -6,6 +6,7 @@ import { SunPosition } from "./sun-model"
 type HoneycombDefaultHex = Hex<HexFactory<{}>>
 export type HexGrid = Grid<HoneycombDefaultHex>
 export type GamefieldGrid = Grid<GamefieldModel>
+
 export class GameboardModel {
   readonly hexGrid: HexGrid
   readonly gamefields: GamefieldGrid
@@ -14,6 +15,10 @@ export class GameboardModel {
   constructor() {
     this.hexGrid = defineGrid().hexagon({ radius: 4 })
     this.gamefields = this.hexGrid.map(this.buildGamefieldFromHex)
+  }
+
+  desactivateAllGamefields() {
+    this.gamefields.forEach((gamefield) => gamefield.desactivate())
   }
 
   getGamefields(): Grid<GamefieldModel> {

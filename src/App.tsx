@@ -20,6 +20,8 @@ import {
 
 import { GameConfig } from "./config/gameboardConfig"
 
+const game = new GameModel()
+
 function App() {
   const { innerWidth, innerHeight } = window
   const center = new Point(innerWidth / 2, innerHeight / 2.5)
@@ -29,12 +31,9 @@ function App() {
 
   const defaultConfig = new GameConfig(center)
 
-  const game = new GameModel()
-  const gameboard = game.board
-
   const gameboardViewController = new GameboardViewController(
     defaultConfig,
-    gameboard
+    game.board
   )
 
   const serializedGame = new GameStateSerializer(game).serialize()
@@ -42,8 +41,8 @@ function App() {
   const stringifiedGame = JSON.stringify(serializedGame)
   const parsedGame = JSON.parse(stringifiedGame)
 
-  console.log("stringifiedGame", stringifiedGame)
-  console.log("parsedGame", parsedGame)
+  // console.log("stringifiedGame", stringifiedGame)
+  // console.log("parsedGame", parsedGame)
 
   return (
     <div className="App">
@@ -59,7 +58,7 @@ function App() {
       <div className={styles.button1}>
         <Button
           onClick={() => {
-            game.nextRound()
+            game.onNextRound()
             incrementCounter()
           }}
         >
@@ -75,6 +74,17 @@ function App() {
           }}
         >
           Seed
+        </Button>
+      </div>
+      <div className={styles.button3}>
+        <Button
+          onClick={() => {
+            gameboardViewController.setDisplayProperty(
+              DisplayProperty.SeedableFields
+            )
+          }}
+        >
+          Small Tree
         </Button>
       </div>
     </div>

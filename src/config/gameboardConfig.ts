@@ -3,10 +3,11 @@ import { Point } from "../utils/Point"
 import { GameboardFieldProps } from "../components/gameboard/GameboardField"
 
 enum GamefieldBackground {
-  Center = "#2a5413",
-  FirstRow = "#5f913a",
-  SecondRow = "#8eb354",
-  ThirdRow = "#adbd53",
+  Center = ` rgba(80, 107, 32, 1)`,
+  FirstRow = ` rgba(125, 145, 52, 1)`,
+  SecondRow = `rgba(162, 168, 82, 1)`,
+  ThirdRow = ` rgba(204, 197, 126, 1)`,
+  Sun = `rgba(219, 188, 10, 1)`,
 }
 
 export const colorsGradient = [

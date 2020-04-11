@@ -4,6 +4,7 @@ import { GamefieldModel } from "../models/gamefield-model"
 import { GamefieldViewController } from "./gamefield-view-controller"
 
 export enum DisplayProperty {
+  Default = "default",
   SeedableFields = "seedable fields",
 }
 

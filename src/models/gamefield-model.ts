@@ -13,6 +13,7 @@ export type GamefieldExtraProps = {
 export class GamefieldModel {
   readonly distanceFromCenter: GamefieldDistances
   readonly tree: TreeModel
+  hasBeenTouched = false
 
   constructor(
     readonly coords: HexCoords,
@@ -28,11 +29,20 @@ export class GamefieldModel {
   }
 
   growTree(): void {
-    this.tree.grow()
+    if (!this.hasBeenTouched) this.tree.grow()
+    this.hasBeenTouched = true
+  }
+
+  desactivate(): void {
+    this.hasBeenTouched = false
+  }
+
+  getTree(): TreeSize {
+    return this.tree.get()
   }
 
   serialize(): SerializedGamefield {
-    const tree = this.tree.get()
+    const tree = this.getTree()
     const coords = this.coords
 
     return tree !== TreeSize.Empty ? { coords, tree } : { coords }

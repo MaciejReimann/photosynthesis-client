@@ -27,24 +27,29 @@ export function Gameboard({
   const { gamefieldConfig, colorsConfig } = config
   const gameFields = controller.getGameFields()
 
-  console.log("sunPosition", sunPosition)
+  // console.log("sunPosition", sunPosition)
 
   return (
     <Layer>
       {gameFields.map((field: GamefieldViewController, i: number) => {
         const distanceFromCenter = field.getDistanceFromCenter()
         const fieldCenter = field.getCenterCoords()
+        const tree = field.getTree()
+        console.log("tree", tree)
 
         const key = `${fieldCenter.x}${i}`
 
         const handleClick = () => {
           controller.onClickField(i)
           field.onClick()
+          onClick()
         }
+
+        const getOpacity = () => 0.5 + 1 / (distanceFromCenter + 1)
 
         return !field.isOnOuterRing() ? (
           <GameboardField
-            opacity={0.5 + 1 / (distanceFromCenter + 1)}
+            opacity={1}
             fill={colorsConfig.background[distanceFromCenter]}
             radius={gamefieldConfig.radius}
             x={fieldCenter.x}
@@ -53,11 +58,7 @@ export function Gameboard({
             onClick={handleClick}
             onMouseover={() => controller.onMouseoverField(i)}
           >
-            {/* <SpriteComponent
-              tree={field.tree.get()}
-              x={fieldCenter.x}
-              y={fieldCenter.y}
-            /> */}
+            <SpriteComponent tree={tree} x={fieldCenter.x} y={fieldCenter.y} />
           </GameboardField>
         ) : (
           <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
