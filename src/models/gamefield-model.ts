@@ -35,6 +35,13 @@ export class GamefieldModel {
     this.hasBeenTouched = false
   }
 
+  plantSmallTree(): void {
+    if (this.isEmpty()) {
+      this.growTree()
+      this.growTree()
+    }
+  }
+
   growTree(): void {
     if (!this.hasBeenTouched) this.tree.grow()
     this.hasBeenTouched = true
