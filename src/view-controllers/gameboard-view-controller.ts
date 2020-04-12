@@ -56,7 +56,8 @@ export class GameboardViewController {
     return this.config.gamefieldConfig.radius
   }
 
-  getGameFields(): (GamefieldViewController | SunRayDisplay)[] {
+  getGameFieldControllers(): (GamefieldViewController | SunRayDisplay)[] {
+    if (this.isSeedableFieldsSelected) this.highlightSeedableFields() /// they should be stored in the model after each click
     return this.gamefieldControllers
   }
 
@@ -110,7 +111,7 @@ export class GameboardViewController {
     gameboardModel: any
   ): (GamefieldViewController | SunRayDisplay)[] {
     return gameboardModel
-      .getGamefields()
+      .getGamefieldModelsGrid()
       .map((field: GamefieldModel, i: number) => {
         const offset = this.getOffsetFromCenter(i)
         const color = this.getFieldColor(config, field)

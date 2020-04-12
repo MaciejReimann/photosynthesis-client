@@ -28,7 +28,7 @@ export function Gameboard({
   return (
     <Layer>
       {controller
-        .getGameFields()
+        .getGameFieldControllers()
         .map((field: GamefieldViewController | SunRayDisplay, i: number) => {
           const fieldCenter = field.getCenterCoords()
           const key = `${fieldCenter.x}${i}`

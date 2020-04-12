@@ -11,8 +11,14 @@ export class GameModel {
     this.sun = new SunModel()
   }
 
+  makeMove(id: number): void {
+    if (this.round === 0) {
+    }
+  }
+
   onNextRound(): void {
     this.board.desactivateAllGamefields()
+
     this.sun.rotate()
     this.incrementRound()
   }

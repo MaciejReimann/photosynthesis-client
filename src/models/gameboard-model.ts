@@ -18,27 +18,31 @@ export type CartesianCoords = { x: number; y: number }
 export class GameboardModel {
   readonly hex: any
   readonly hexGrid: HexGrid
-  readonly gamefields: GamefieldGrid
+  readonly gamefieldModelsGrid: GamefieldGrid
 
   constructor() {
     this.hex = extendHex()
     this.hexGrid = defineGrid().hexagon({ radius: 4 })
-    this.gamefields = this.hexGrid.map(this.buildGamefieldFromHex)
+    this.gamefieldModelsGrid = this.hexGrid.map(this.buildGamefieldFromHex)
   }
 
   // setters
 
   desactivateAllGamefields(): void {
-    this.gamefields.forEach(
+    this.gamefieldModelsGrid.forEach(
       (f) => f instanceof GamefieldModel && f.desactivate()
     )
   }
 
   // getters
 
-  getGamefields(): Grid<GameboardField> {
-    return this.gamefields
+  getGamefieldModelsGrid(): Grid<GameboardField> {
+    return this.gamefieldModelsGrid
   }
+
+  // getGamefieldById(id: number): void {
+  //   return this.getGamefields()[id]
+  // }
 
   getSeedableFieldsIds(): number[] {
     const fieldsInSeedableRange = this.getFieldsInSeedableRange()
@@ -53,6 +57,10 @@ export class GameboardModel {
   }
 
   // helpers
+
+  // private getPlayableGamefields(): Grid<GameboardField> {
+  //   return this.getGamefields()
+  // }
 
   private removeNonEmptyFields(gamefields: GamefieldModel[]): GamefieldModel[] {
     return gamefields.filter((f) => f instanceof GamefieldModel && f.isEmpty())
@@ -74,7 +82,7 @@ export class GameboardModel {
   }
 
   private getNeighbours(id: number, range: number): GamefieldGrid {
-    const gameFieldsInRange = this.gamefields.filter(
+    const gameFieldsInRange = this.gamefieldModelsGrid.filter(
       (f) =>
         f instanceof GamefieldModel &&
         this.getIdsOfNeighbours(id, range).some((id) => id === f.id)
@@ -96,7 +104,7 @@ export class GameboardModel {
   }
 
   private getFieldsWithTrees(): GamefieldGrid {
-    return this.gamefields.filter(
+    return this.gamefieldModelsGrid.filter(
       (f) => f instanceof GamefieldModel && f.hasTree()
     )
   }
