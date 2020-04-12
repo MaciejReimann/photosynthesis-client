@@ -2,7 +2,7 @@ import { RepositoryModel } from "./repository-model"
 export class PlayerModel {
   private name: string = ""
   private isActive: boolean = false
-  private repositoryModel: RepositoryModel
+  repositoryModel: RepositoryModel
 
   constructor(readonly id: number, name?: string) {
     this.id = id

@@ -13,6 +13,7 @@ import {
   GameboardViewController,
   DisplayProperty,
 } from "./view-controllers/gameboard-view-controller"
+import { PlayerVewController } from "./view-controllers/player-view-controller"
 
 /// Utils
 import { Point } from "./utils/Point"
@@ -24,8 +25,8 @@ import { Button } from "./components/Button"
 import { Gameboard } from "./components/gameboard/Gameboard"
 import styles from "./UserLayout.module.scss"
 
-const player = new PlayerModel(0)
-const game = new GameModel(player)
+const playerModel = new PlayerModel(0)
+const game = new GameModel(playerModel)
 const { innerWidth, innerHeight } = window
 const center = new Point(innerWidth / 2, innerHeight / 2.5)
 const defaultConfig = new GameConfig(center)
@@ -34,6 +35,8 @@ const gameboardViewController = new GameboardViewController(
   defaultConfig,
   game.board
 )
+
+const playerViewController = new PlayerVewController(playerModel)
 
 function App() {
   const [counter, setCounter] = useState(0)
