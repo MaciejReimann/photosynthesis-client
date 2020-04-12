@@ -1,3 +1,5 @@
+import { pullAt } from "lodash"
+
 import { TreeSize } from "./tree-model"
 
 class RepoItem {
@@ -9,18 +11,24 @@ class RepoItem {
 
 export class RepositoryModel {
   private points: number = 0
-  private seeds: RepoItem[]
-  private smallTrees: RepoItem[]
-  private mediumTrees: RepoItem[]
-  private largeTrees: RepoItem[]
+  private repo: RepoItem[]
 
   constructor() {
     this.points = 0
-    const startRepo = buildStartRepo()
-    this.seeds = startRepo.seeds
-    this.smallTrees = startRepo.smallTrees
-    this.mediumTrees = startRepo.mediumTrees
-    this.largeTrees = startRepo.largeTrees
+    this.repo = buildStartRepo()
+  }
+
+  pullSeedFromRepo(i: number): RepoItem | null {
+    const pulledItem = this.repo[i]
+    if (this.canAfford(pulledItem)) {
+      pullAt(this.repo, i)
+      return pulledItem
+    }
+    return null
+  }
+
+  private canAfford(item: RepoItem): boolean {
+    return item.cost <= this.points
   }
 }
 
@@ -30,16 +38,16 @@ function buildStartRepo() {
   const mediumTreeCosts = [4, 4, 3]
   const largeTreeCosts = [5, 4]
 
-  return {
-    seeds: seedCosts.map((cost) => new RepoItem(TreeSize.Seed, cost)),
-    smallTrees: smallTreeCosts.map(
-      (cost) => new RepoItem(TreeSize.Small, cost)
-    ),
-    mediumTrees: mediumTreeCosts.map(
-      (cost) => new RepoItem(TreeSize.Medium, cost)
-    ),
-    largeTrees: largeTreeCosts.map(
-      (cost) => new RepoItem(TreeSize.Large, cost)
-    ),
-  }
+  const seeds = seedCosts.map((cost) => new RepoItem(TreeSize.Seed, cost))
+  const smallTrees = smallTreeCosts.map(
+    (cost) => new RepoItem(TreeSize.Small, cost)
+  )
+  const mediumTrees = mediumTreeCosts.map(
+    (cost) => new RepoItem(TreeSize.Medium, cost)
+  )
+  const largeTrees = largeTreeCosts.map(
+    (cost) => new RepoItem(TreeSize.Large, cost)
+  )
+
+  return [...seeds, ...smallTrees, ...mediumTrees, ...largeTrees]
 }
