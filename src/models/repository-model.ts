@@ -11,24 +11,40 @@ class RepoItem {
 
 export class RepositoryModel {
   private points: number = 0
-  private repo: RepoItem[]
+  private paidRepo: RepoItem[][]
+  private freeRepo: RepoItem[]
 
   constructor() {
     this.points = 0
-    this.repo = buildStartRepo()
+    this.paidRepo = buildStartRepo()
+    this.freeRepo = buildFreeItems()
   }
 
-  pullSeedFromRepo(i: number): RepoItem | null {
-    const pulledItem = this.repo[i]
+  pullItemForFree(i: number): RepoItem {
+    const pulled = pullAt(this.freeRepo, i)
+    return pulled[0]
+  }
+
+  pullItem(i: number, j: number): RepoItem | null {
+    const pulledItem = this.paidRepo[i][j]
     if (this.canAfford(pulledItem)) {
-      pullAt(this.repo, i)
+      this.paidRepo[i][j] = new RepoItem(TreeSize.Empty, pulledItem.cost)
       return pulledItem
     }
     return null
   }
 
+  pushItem(itemName: TreeSize, i: number, j: number): void {
+    if (this.isEmpty(i, j)) {
+      this.paidRepo[i][j] = new RepoItem(itemName, this.paidRepo[i][j].cost)
+    }
+  }
+
   private canAfford(item: RepoItem): boolean {
     return item.cost <= this.points
+  }
+  private isEmpty(i: number, j: number): boolean {
+    return this.paidRepo[i][j].treeSize === TreeSize.Empty
   }
 }
 
@@ -49,5 +65,16 @@ function buildStartRepo() {
     (cost) => new RepoItem(TreeSize.Large, cost)
   )
 
-  return [...seeds, ...smallTrees, ...mediumTrees, ...largeTrees]
+  return [seeds, smallTrees, mediumTrees, largeTrees]
+}
+
+function buildFreeItems() {
+  const freeItems = [
+    TreeSize.Seed,
+    TreeSize.Seed,
+    TreeSize.Small,
+    TreeSize.Small,
+    TreeSize.Medium,
+  ]
+  return freeItems.map((name) => new RepoItem(name, 0))
 }
