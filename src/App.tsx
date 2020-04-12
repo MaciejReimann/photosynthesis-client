@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
 // UI Components
+import { Layout } from "./components/layout/Layout"
 import { Button } from "./components/Button"
 
 import { GameModel } from "./models/game-model"
@@ -43,48 +44,50 @@ function App() {
   // console.log("parsedGame", parsedGame)
 
   return (
-    <div className="App">
-      <Stage width={innerWidth} height={innerHeight}>
-        <Gameboard
-          sunPosition={game.sun.getSunDirection()}
-          shadowDirection={game.sun.getShadowDirection()}
-          controller={gameboardViewController}
-          onClick={incrementCounter}
-        />
-      </Stage>
-      <div className={styles.button1}>
-        <Button
-          onClick={() => {
-            game.onNextRound()
-            incrementCounter()
-          }}
-        >
-          Next Round
-        </Button>
-      </div>
-      <div className={styles.button2}>
-        <Button
-          onClick={() => {
-            gameboardViewController.highlightSeedableFields()
-            incrementCounter()
-          }}
-        >
-          Seed
-        </Button>
-      </div>
-      <div className={styles.button3}>
-        <Button
-          onClick={() => {
-            gameboardViewController.setDisplayProperty(
-              DisplayProperty.SeedableFields
-            )
-            incrementCounter()
-          }}
-        >
-          Small Tree
-        </Button>
-      </div>
-    </div>
+    <Layout>
+      <>
+        <Stage width={innerWidth} height={innerHeight}>
+          <Gameboard
+            sunPosition={game.sun.getSunDirection()}
+            shadowDirection={game.sun.getShadowDirection()}
+            controller={gameboardViewController}
+            onClick={incrementCounter}
+          />
+        </Stage>
+        <div className={styles.button1}>
+          <Button
+            onClick={() => {
+              game.onNextRound()
+              incrementCounter()
+            }}
+          >
+            Next Round
+          </Button>
+        </div>
+        <div className={styles.button2}>
+          <Button
+            onClick={() => {
+              gameboardViewController.highlightSeedableFields()
+              incrementCounter()
+            }}
+          >
+            Seed
+          </Button>
+        </div>
+        <div className={styles.button3}>
+          <Button
+            onClick={() => {
+              gameboardViewController.setDisplayProperty(
+                DisplayProperty.SeedableFields
+              )
+              incrementCounter()
+            }}
+          >
+            Small Tree
+          </Button>
+        </div>
+      </>
+    </Layout>
   )
 }
 
