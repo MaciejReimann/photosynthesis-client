@@ -28,9 +28,9 @@ export class GameboardModel {
 
   // setters
 
-  desactivateAllGamefields(): void {
+  activateAllGamefields(): void {
     this.gamefieldModelsGrid.forEach(
-      (f) => f instanceof GamefieldModel && f.desactivate()
+      (f) => f instanceof GamefieldModel && f.setHasBeentouched(false)
     )
   }
 
@@ -40,9 +40,9 @@ export class GameboardModel {
     return this.gamefieldModelsGrid
   }
 
-  // getGamefieldById(id: number): void {
-  //   return this.getGamefields()[id]
-  // }
+  getGamefieldModelById(id: number): GamefieldModel {
+    return this.getGamefieldModelsGrid()[id] as GamefieldModel
+  }
 
   getSeedableFieldsIds(): number[] {
     const fieldsInSeedableRange = this.getFieldsInSeedableRange()
@@ -56,10 +56,16 @@ export class GameboardModel {
     return this.hexGrid[id]
   }
 
+  getTreesCount(): number {
+    return this.getFieldsWithTrees().length
+  }
+
   // helpers
 
-  // private getPlayableGamefields(): Grid<GameboardField> {
-  //   return this.getGamefields()
+  // private getGamefieldModels(): Grid<GamefieldModel> {
+  //   return this.gamefieldModelsGrid.filter(
+  //     (f) => f instanceof GamefieldModel
+  //   ) as Grid<GamefieldModel>
   // }
 
   private removeNonEmptyFields(gamefields: GamefieldModel[]): GamefieldModel[] {

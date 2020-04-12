@@ -5,11 +5,11 @@ import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 import { Button } from "./components/Button"
 
 import { GameModel } from "./models/game-model"
-import { GameboardModel } from "./models/gameboard-model"
+// import { GameboardModel } from "./models/gameboard-model"
 import { Gameboard } from "./components/gameboard/Gameboard"
 import { Point } from "./utils/Point"
 
-import { GameStateSerializer } from "./serializers/game-serializer"
+// import { GameStateSerializer } from "./serializers/game-serializer"
 
 import styles from "./UserLayout.module.scss"
 
@@ -17,18 +17,24 @@ import {
   GameboardViewController,
   DisplayProperty,
 } from "./view-controllers/gameboard-view-controller"
+import {
+  GameViewController,
+  ActionCategory,
+} from "./view-controllers/game-view-controller"
 
 import { GameConfig } from "./config/gameboardConfig"
 
-const game = new GameModel()
+const gameModel = new GameModel()
 const { innerWidth, innerHeight } = window
 const center = new Point(innerWidth / 2, innerHeight / 2.5)
 const defaultConfig = new GameConfig(center)
 
 const gameboardViewController = new GameboardViewController(
   defaultConfig,
-  game.board
+  gameModel.boardModel
 )
+
+const gameViewController = new GameViewController(gameModel)
 
 function App() {
   const [counter, setCounter] = useState(0)
@@ -46,16 +52,19 @@ function App() {
     <div className="App">
       <Stage width={innerWidth} height={innerHeight}>
         <Gameboard
-          sunPosition={game.sun.getSunDirection()}
-          shadowDirection={game.sun.getShadowDirection()}
+          sunPosition={gameModel.sun.getSunDirection()}
+          shadowDirection={gameModel.sun.getShadowDirection()}
           controller={gameboardViewController}
-          onClick={incrementCounter}
+          onClick={(i: number) => {
+            gameViewController.onClickField(i)
+            incrementCounter()
+          }}
         />
       </Stage>
       <div className={styles.button1}>
         <Button
           onClick={() => {
-            game.onNextRound()
+            gameModel.onNextRound()
             incrementCounter()
           }}
         >
@@ -74,10 +83,9 @@ function App() {
       </div>
       <div className={styles.button3}>
         <Button
+          disabled={!gameViewController.isPlantingSmallTreeAllowed()}
           onClick={() => {
-            gameboardViewController.setDisplayProperty(
-              DisplayProperty.SeedableFields
-            )
+            gameViewController.setActionCategory(ActionCategory.MakeMove)
             incrementCounter()
           }}
         >

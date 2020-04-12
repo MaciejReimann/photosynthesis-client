@@ -73,8 +73,4 @@ export class GamefieldViewController extends DefaultFieldController {
   getTree(): TreeSize {
     return this.fieldModel.getTree()
   }
-
-  onClick(): void {
-    this.fieldModel.growTree()
-  }
 }

@@ -35,9 +35,9 @@ export function Gameboard({
 
           if (field instanceof GamefieldViewController) {
             const handleClick = () => {
-              controller.onClickField(i)
-              field.onClick()
-              onClick()
+              // controller.onClickField(i)
+              // field.onClick()
+              onClick(i)
             }
 
             return (

@@ -31,13 +31,14 @@ export class GamefieldModel {
 
   // setters
 
-  desactivate(): void {
-    this.hasBeenTouched = false
+  setHasBeentouched(value: boolean): void {
+    this.hasBeenTouched = value
   }
 
   plantSmallTree(): void {
     if (this.isEmpty()) {
       this.growTree()
+      this.setHasBeentouched(false)
       this.growTree()
     }
   }
