@@ -1,11 +1,12 @@
 import { RepositoryModel } from "./repository-model"
-export class Player {
+export class PlayerModel {
   private name: string = ""
   private isActive: boolean = false
   private repositoryModel: RepositoryModel
 
-  constructor(readonly id: number) {
+  constructor(readonly id: number, name?: string) {
     this.id = id
+    this.name = name || `Player ${this.id}`
     this.repositoryModel = new RepositoryModel()
   }
 

@@ -1,27 +1,31 @@
 import React, { useState } from "react"
 import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
-// UI Components
-import { Layout } from "./components/layout/Layout"
-import { Button } from "./components/Button"
+// Config
+import { GameConfig } from "./config/gameboardConfig"
 
+// Models
 import { GameModel } from "./models/game-model"
-import { GameboardModel } from "./models/gameboard-model"
-import { Gameboard } from "./components/gameboard/Gameboard"
-import { Point } from "./utils/Point"
+import { PlayerModel } from "./models/player-model"
 
-import { GameStateSerializer } from "./serializers/game-serializer"
-
-import styles from "./UserLayout.module.scss"
-
+// Controllers
 import {
   GameboardViewController,
   DisplayProperty,
 } from "./view-controllers/gameboard-view-controller"
 
-import { GameConfig } from "./config/gameboardConfig"
+/// Utils
+import { Point } from "./utils/Point"
+import { GameStateSerializer } from "./serializers/game-serializer"
+// UI Components
 
-const game = new GameModel()
+import { Layout } from "./components/layout/Layout"
+import { Button } from "./components/Button"
+import { Gameboard } from "./components/gameboard/Gameboard"
+import styles from "./UserLayout.module.scss"
+
+const player = new PlayerModel(0)
+const game = new GameModel(player)
 const { innerWidth, innerHeight } = window
 const center = new Point(innerWidth / 2, innerHeight / 2.5)
 const defaultConfig = new GameConfig(center)
@@ -34,6 +38,8 @@ const gameboardViewController = new GameboardViewController(
 function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
+
+  console.log(game)
 
   // const serializedGame = new GameStateSerializer(game).serialize()
 
