@@ -1,11 +1,12 @@
-// import { Repository } from "./repository-model"
+import { RepositoryModel } from "./repository-model"
 export class Player {
   private name: string = ""
   private isActive: boolean = false
+  private repositoryModel: RepositoryModel
 
   constructor(readonly id: number) {
     this.id = id
-    // this.repository = new Repository()
+    this.repositoryModel = new RepositoryModel()
   }
 
   // setters
