@@ -22,7 +22,7 @@ export class GameboardModel {
 
   constructor() {
     this.hex = extendHex()
-    this.hexGrid = defineGrid().hexagon({ radius: 3 })
+    this.hexGrid = defineGrid().hexagon({ radius: 4 })
     this.gamefieldModelsGrid = this.hexGrid.map(this.buildGamefieldFromHex)
   }
 

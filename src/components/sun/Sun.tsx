@@ -1,6 +1,7 @@
 import React from "react"
 import { Layer } from "react-konva"
 
+import { Point } from "../../models/point-model"
 import { SunViewController } from "../../view-controllers/sun-view-controller"
 
 import { Sunray } from "./Sunray"
@@ -10,10 +11,13 @@ interface SunraysProps {
 }
 
 export function Sun({ controller }: SunraysProps) {
-  console.log(controller)
+  const anchorPoints = controller.getSunrayAnchorPoints()
+
   return (
     <Layer>
-      <Sunray x={100} y={100} />
+      {anchorPoints.map((point: Point) => (
+        <Sunray x={point.x} y={point.y} />
+      ))}
     </Layer>
   )
 }

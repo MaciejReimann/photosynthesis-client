@@ -59,7 +59,7 @@ export function Gameboard({
               </GameboardField>
             )
           } else {
-            return <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
+            // return <SunRay x={fieldCenter.x} y={fieldCenter.y} key={key} />
           }
         })}
     </Layer>

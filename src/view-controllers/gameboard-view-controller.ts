@@ -94,7 +94,7 @@ export class GameboardViewController {
     return seedableFieldsIds.includes(id)
   }
 
-  private getOffsetFromCenter(fieldIndex: number): Point {
+  private getRenderCoordinates(fieldIndex: number): Point {
     const { gamefieldConfig, center } = this.config
     const field = this.gemeboardModel.getHexCoordsById(fieldIndex).toPoint()
 
@@ -113,7 +113,7 @@ export class GameboardViewController {
     return gameboardModel
       .getGamefieldModelsGrid()
       .map((field: GamefieldModel, i: number) => {
-        const offset = this.getOffsetFromCenter(i)
+        const offset = this.getRenderCoordinates(i)
         const color = this.getFieldColor(config, field)
         return field instanceof GamefieldModel
           ? new GamefieldViewController(field, offset, color)

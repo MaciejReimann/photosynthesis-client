@@ -42,7 +42,11 @@ const gameboardViewController = new GameboardViewController(
   defaultConfig,
   gameboardModel
 )
-const sunViewController = new SunViewController(sunModel, gameboardModel)
+const sunViewController = new SunViewController(
+  defaultConfig,
+  sunModel,
+  gameboardModel
+)
 const gameViewController = new GameViewController(gameModel)
 
 function App() {
