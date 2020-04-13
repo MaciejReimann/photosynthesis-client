@@ -1,13 +1,17 @@
+import { PlayerModel } from "./player-model"
 import { SunModel } from "./sun-model"
 import { GameboardModel } from "./gameboard-model"
 
 export class GameModel {
   round = 0
+  private players: PlayerModel[] = []
 
   constructor(
+    player: PlayerModel,
     readonly boardModel: GameboardModel,
     readonly sunModel: SunModel
   ) {
+    this.players = [player]
     this.boardModel = boardModel
     this.sunModel = sunModel
   }
