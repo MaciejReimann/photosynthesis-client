@@ -3,35 +3,36 @@ import { GameboardModel } from "./gameboard-model"
 
 export class GameModel {
   round = 0
-  boardModel: GameboardModel
-  sun: SunModel
 
-  constructor() {
-    this.boardModel = new GameboardModel()
-    this.sun = new SunModel()
+  constructor(
+    readonly boardModel: GameboardModel,
+    readonly sunModel: SunModel
+  ) {
+    this.boardModel = boardModel
+    this.sunModel = sunModel
   }
 
   // setters
 
   makeMove(id: number): void {
-    const gamefield = this.boardModel.getGamefieldModelById(id)
-    if (this.isPlantingSmallTreeAllowed()) {
-      gamefield.plantSmallTree()
-    }
+    // const gamefield = this.boardModel.getGamefieldModelById(id)
+    // if (this.isPlantingSmallTreeAllowed()) {
+    //   gamefield.plantSmallTree()
+    // }
   }
 
   // getters
 
-  isMoreMovesAllowedForPlayer(): boolean {}
+  // isMoreMovesAllowedForPlayer(): boolean {}
 
-  isPlantingSmallTreeAllowed(): boolean {
-    return this.round < 2 && this.boardModel.getTreesCount() < 2
-  }
+  // isPlantingSmallTreeAllowed(): boolean {
+  //   return this.round < 2 && this.boardModel.getTreesCount() < 2
+  // }
 
   onNextRound(): void {
-    this.boardModel.activateAllGamefields()
+    // this.boardModel.activateAllGamefields()
 
-    this.sun.rotate()
+    this.sunModel.rotate()
     this.incrementRound()
   }
 

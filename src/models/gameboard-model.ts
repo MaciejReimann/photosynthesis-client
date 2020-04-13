@@ -22,16 +22,16 @@ export class GameboardModel {
 
   constructor() {
     this.hex = extendHex()
-    this.hexGrid = defineGrid().hexagon({ radius: 4 })
+    this.hexGrid = defineGrid().hexagon({ radius: 3 })
     this.gamefieldModelsGrid = this.hexGrid.map(this.buildGamefieldFromHex)
   }
 
   // setters
 
   activateAllGamefields(): void {
-    this.gamefieldModelsGrid.forEach(
-      (f) => f instanceof GamefieldModel && f.setHasBeentouched(false)
-    )
+    // this.gamefieldModelsGrid.forEach(
+    //   (f) => f instanceof GamefieldModel && f.setHasBeentouched(false)
+    // )
   }
 
   // getters

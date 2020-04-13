@@ -23,9 +23,9 @@ export class GameViewController {
 
   //getters
 
-  isPlantingSmallTreeAllowed(): boolean {
-    return this.gameModel.isPlantingSmallTreeAllowed()
-  }
+  // isPlantingSmallTreeAllowed(): boolean {
+  //   return this.gameModel.isPlantingSmallTreeAllowed()
+  // }
 
   onClickField(id: number): void {
     if (this.actionCategory === ActionCategory.MakeMove) {

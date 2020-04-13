@@ -7,12 +7,14 @@ import { Button } from "./components/Button"
 import { GameModel } from "./models/game-model"
 // import { GameboardModel } from "./models/gameboard-model"
 import { Gameboard } from "./components/gameboard/Gameboard"
+import { Sun } from "./components/sun/Sun"
 import { Point } from "./utils/Point"
 
 // import { GameStateSerializer } from "./serializers/game-serializer"
 
 import styles from "./UserLayout.module.scss"
 
+import { SunViewController } from "./view-controllers/sun-view-controller"
 import {
   GameboardViewController,
   DisplayProperty,
@@ -24,16 +26,23 @@ import {
 
 import { GameConfig } from "./config/gameboardConfig"
 
-const gameModel = new GameModel()
+import { GameboardModel } from "./models/gameboard-model"
+import { SunModel } from "./models/sun-model"
+
 const { innerWidth, innerHeight } = window
 const center = new Point(innerWidth / 2, innerHeight / 2.5)
 const defaultConfig = new GameConfig(center)
 
+const gameboardModel = new GameboardModel()
+const sunModel = new SunModel()
+
+const gameModel = new GameModel(gameboardModel, sunModel)
+
 const gameboardViewController = new GameboardViewController(
   defaultConfig,
-  gameModel.boardModel
+  gameboardModel
 )
-
+const sunViewController = new SunViewController(sunModel, gameboardModel)
 const gameViewController = new GameViewController(gameModel)
 
 function App() {
@@ -52,14 +61,15 @@ function App() {
     <div className="App">
       <Stage width={innerWidth} height={innerHeight}>
         <Gameboard
-          sunPosition={gameModel.sun.getSunDirection()}
-          shadowDirection={gameModel.sun.getShadowDirection()}
+          sunPosition={gameModel.sunModel.getSunDirection()}
+          shadowDirection={gameModel.sunModel.getShadowDirection()}
           controller={gameboardViewController}
           onClick={(i: number) => {
             gameViewController.onClickField(i)
             incrementCounter()
           }}
         />
+        <Sun controller={sunViewController} />
       </Stage>
       <div className={styles.button1}>
         <Button
@@ -83,7 +93,7 @@ function App() {
       </div>
       <div className={styles.button3}>
         <Button
-          disabled={!gameViewController.isPlantingSmallTreeAllowed()}
+          // disabled={!gameViewController.isPlantingSmallTreeAllowed()}
           onClick={() => {
             gameViewController.setActionCategory(ActionCategory.MakeMove)
             incrementCounter()
