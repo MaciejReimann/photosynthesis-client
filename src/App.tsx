@@ -9,28 +9,28 @@ import { PlayerModel } from "./models/player-model"
 import { GameboardModel } from "./models/gameboard-model"
 import { SunModel } from "./models/sun-model"
 import { GameModel } from "./models/game-model"
+import { Point } from "./models/point-model"
 
 // View Controllers
-// import {PlayerViewController} from "./view-controllers/player-view-controller"
+import { PlayerVewController } from "./view-controllers/player-view-controller"
 import {
   GameboardViewController,
-  DisplayProperty,
+  // DisplayProperty,
 } from "./view-controllers/gameboard-view-controller"
 import { SunViewController } from "./view-controllers/sun-view-controller"
 import {
   GameViewController,
   ActionCategory,
 } from "./view-controllers/game-view-controller"
-import { PlayerVewController } from "./view-controllers/player-view-controller"
 
 /// Utils
-import { Point } from "./utils/Point"
-import { GameStateSerializer } from "./serializers/game-serializer"
-// UI Components
+// import { GameStateSerializer } from "./serializers/game-serializer"
 
+// UI Components
 import { Layout } from "./components/layout/Layout"
 import { Button } from "./components/Button"
 import { Gameboard } from "./components/gameboard/Gameboard"
+import { Sun } from "./components/sun/Sun"
 import styles from "./UserLayout.module.scss"
 
 const { innerWidth, innerHeight } = window
@@ -61,14 +61,6 @@ function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
 
-  // const serializedGame = new GameStateSerializer(game).serialize()
-
-  // const stringifiedGame = JSON.stringify(serializedGame)
-  // const parsedGame = JSON.parse(stringifiedGame)
-
-  // console.log("stringifiedGame", stringifiedGame)
-  // console.log("parsedGame", parsedGame)
-
   return (
     <Layout>
       <>
@@ -80,6 +72,7 @@ function App() {
               incrementCounter()
             }}
           />
+          <Sun controller={sunViewController} />
         </Stage>
         <div className={styles.button1}>
           <Button

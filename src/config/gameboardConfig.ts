@@ -1,4 +1,4 @@
-import { Point } from "../utils/Point"
+import { Point } from "../models/point-model"
 
 import { GameboardFieldProps } from "../components/gameboard/GameboardField"
 
