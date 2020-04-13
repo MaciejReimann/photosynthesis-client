@@ -35,6 +35,7 @@ export class SunViewController {
     )
   }
 
+  // move this to hex view controller
   private getRenderCoordinates(hex: HoneycombHex): Point {
     const point = hex.toPoint()
     return this.getPointCenterOffset(point)
@@ -59,6 +60,8 @@ export class SunViewController {
       return this.hasNeighboursInDirection(hex, sunPosition)
     })
   }
+
+  // move all this to hex model
 
   private hasNeighboursInDirection(
     hex: HoneycombHex,

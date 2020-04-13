@@ -5,10 +5,7 @@ import { GameboardModel } from "../models/gameboard-model"
 import { GamefieldModel } from "../models/gamefield-model"
 import { mapFertilityIndexToDistanceFromCenter } from "../models/utils"
 
-import {
-  SunRayDisplay,
-  GamefieldViewController,
-} from "./gamefield-view-controller"
+import { GamefieldViewController } from "./gamefield-view-controller"
 
 export enum DisplayProperty {
   Default = "default",
@@ -16,7 +13,7 @@ export enum DisplayProperty {
 }
 
 export class GameboardViewController {
-  readonly gamefieldControllers: (GamefieldViewController | SunRayDisplay)[]
+  readonly gamefieldControllers: GamefieldViewController[]
   readonly gemeboardModel: GameboardModel
   private isSeedableFieldsSelected: boolean
 
@@ -42,11 +39,9 @@ export class GameboardViewController {
     console.log("higlighting seedable fields")
 
     this.gamefieldControllers.forEach((gamefield) => {
-      if (gamefield instanceof GamefieldViewController) {
-        const isSeedable = this.isGamefieldSeedable(gamefield.getId())
+      const isSeedable = this.isGamefieldSeedable(gamefield.getId())
 
-        !isSeedable && gamefield.desaturate()
-      }
+      !isSeedable && gamefield.desaturate()
     })
   }
 
@@ -56,7 +51,7 @@ export class GameboardViewController {
     return this.config.gamefieldConfig.radius
   }
 
-  getGameFieldControllers(): (GamefieldViewController | SunRayDisplay)[] {
+  getGameFieldControllers(): GamefieldViewController[] {
     if (this.isSeedableFieldsSelected) this.highlightSeedableFields() /// they should be stored in the model after each click
     return this.gamefieldControllers
   }
@@ -109,15 +104,13 @@ export class GameboardViewController {
   private buildGamefieldsControllers(
     config: GameConfig,
     gameboardModel: any
-  ): (GamefieldViewController | SunRayDisplay)[] {
+  ): GamefieldViewController[] {
     return gameboardModel
       .getGamefieldModelsGrid()
       .map((field: GamefieldModel, i: number) => {
         const offset = this.getRenderCoordinates(i)
         const color = this.getFieldColor(config, field)
-        return field instanceof GamefieldModel
-          ? new GamefieldViewController(field, offset, color)
-          : new SunRayDisplay(field, offset, color)
+        return new GamefieldViewController(field, offset, color)
       })
   }
 }

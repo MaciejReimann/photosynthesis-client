@@ -1,19 +1,13 @@
 import { defineGrid, extendHex, Hex, Grid, HexFactory } from "honeycomb-grid"
 import { union } from "lodash"
 
+import { GamefieldModel, GamefieldDistance } from "./gamefield-model"
+import { Point } from "./point-model"
 import { mapDistanceFromCenterToFertilityIndex } from "./utils"
-import {
-  BasicFieldModel,
-  GamefieldModel,
-  GamefieldDistance,
-} from "./gamefield-model"
-import { SunPosition } from "./sun-model"
 
 export type HoneycombHex = Hex<HexFactory<{}>>
-export type GameboardField = BasicFieldModel | GamefieldModel
 export type HexGrid = Grid<HoneycombHex>
-export type GamefieldGrid = Grid<GameboardField>
-export type CartesianCoords = { x: number; y: number }
+export type GamefieldGrid = Grid<GamefieldModel>
 
 export class GameboardModel {
   readonly hex: any
@@ -22,7 +16,7 @@ export class GameboardModel {
 
   constructor() {
     this.hex = extendHex()
-    this.hexGrid = defineGrid().hexagon({ radius: 4 })
+    this.hexGrid = defineGrid().hexagon({ radius: 3 })
     this.gamefieldModelsGrid = this.hexGrid.map(this.buildGamefieldFromHex)
   }
 
@@ -36,7 +30,7 @@ export class GameboardModel {
 
   // getters
 
-  getGamefieldModelsGrid(): Grid<GameboardField> {
+  getGamefieldModelsGrid(): Grid<GamefieldModel> {
     return this.gamefieldModelsGrid
   }
 
@@ -69,7 +63,7 @@ export class GameboardModel {
   // }
 
   private removeNonEmptyFields(gamefields: GamefieldModel[]): GamefieldModel[] {
-    return gamefields.filter((f) => f instanceof GamefieldModel && f.isEmpty())
+    return gamefields.filter((f) => f.isEmpty())
   }
 
   private getFieldsIds(gamefields: GamefieldModel[]): number[] {
@@ -88,10 +82,8 @@ export class GameboardModel {
   }
 
   private getNeighbours(id: number, range: number): GamefieldGrid {
-    const gameFieldsInRange = this.gamefieldModelsGrid.filter(
-      (f) =>
-        f instanceof GamefieldModel &&
-        this.getIdsOfNeighbours(id, range).some((id) => id === f.id)
+    const gameFieldsInRange = this.gamefieldModelsGrid.filter((f) =>
+      this.getIdsOfNeighbours(id, range).some((id) => id === f.id)
     )
     return gameFieldsInRange
   }
@@ -105,25 +97,21 @@ export class GameboardModel {
     return neighbours.map((n) => this.getIdByHexCoords(n))
   }
 
-  private getIdByHexCoords(coords: CartesianCoords): number {
+  private getIdByHexCoords(coords: Point): number {
     return this.hexGrid.indexOf(coords)
   }
 
   private getFieldsWithTrees(): GamefieldGrid {
-    return this.gamefieldModelsGrid.filter(
-      (f) => f instanceof GamefieldModel && f.hasTree()
-    )
+    return this.gamefieldModelsGrid.filter((f) => f.hasTree())
   }
 
-  private buildGamefieldFromHex(hex: HoneycombHex, id: number): GameboardField {
+  private buildGamefieldFromHex(hex: HoneycombHex, id: number): GamefieldModel {
     const centerHex = extendHex()(0, 0)
     const dist = hex.distance(centerHex) as GamefieldDistance
     const fertility = mapDistanceFromCenterToFertilityIndex(dist)
-    return dist < 4
-      ? new GamefieldModel({
-          id,
-          fertility,
-        })
-      : new BasicFieldModel({ id })
+    return new GamefieldModel({
+      id,
+      fertility,
+    })
   }
 }

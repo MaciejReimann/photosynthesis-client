@@ -65,8 +65,6 @@ function App() {
     <div className="App">
       <Stage width={innerWidth} height={innerHeight}>
         <Gameboard
-          sunPosition={gameModel.sunModel.getSunDirection()}
-          shadowDirection={gameModel.sunModel.getShadowDirection()}
           controller={gameboardViewController}
           onClick={(i: number) => {
             gameViewController.onClickField(i)

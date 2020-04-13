@@ -4,19 +4,10 @@ export type GamefieldDistance = 0 | 1 | 2 | 3
 export type FertilityIndex = 4 | 3 | 2 | 1
 
 export type GamefieldModelConfig = {
-  fertility: FertilityIndex
-} & BasicModelConfig
-
-export type BasicModelConfig = {
   id: number
+  fertility: FertilityIndex
 }
-export class BasicFieldModel {
-  readonly id: number
 
-  constructor(config: BasicModelConfig) {
-    this.id = config.id
-  }
-}
 export class GamefieldModel {
   readonly id: number
   readonly fertility: FertilityIndex
