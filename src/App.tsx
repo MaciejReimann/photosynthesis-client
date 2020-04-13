@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, SetStateAction } from "react"
 import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
 // Config
@@ -16,20 +16,21 @@ import { Gameboard } from "./components/gameboard/Gameboard"
 import { Sun } from "./components/sun/Sun"
 import styles from "./UserLayout.module.scss"
 
+const { innerWidth, innerHeight } = window
+const center = new Point(innerWidth / 2, innerHeight / 2.5)
+const defaultConfig = new GameConfig(center)
+
+// TODO: move this to a hook
+const {
+  playerViewController,
+  gameboardViewController,
+  sunViewController,
+  gameViewController,
+} = initializeGameViewControllers(defaultConfig)
+
 function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
-
-  const { innerWidth, innerHeight } = window
-  const center = new Point(innerWidth / 2, innerHeight / 2.5)
-  const defaultConfig = new GameConfig(center)
-
-  const {
-    playerViewController,
-    gameboardViewController,
-    sunViewController,
-    gameViewController,
-  } = initializeGameViewControllers(defaultConfig)
 
   return (
     <Layout>
@@ -47,7 +48,7 @@ function App() {
         <div className={styles.button1}>
           <Button
             onClick={() => {
-              // gameViewController.onNextRound()
+              gameViewController.nextRound()
               incrementCounter()
             }}
           >

@@ -27,6 +27,10 @@ export class GameViewController {
   //   return this.gameModel.isPlantingSmallTreeAllowed()
   // }
 
+  nextRound() {
+    this.gameModel.onNextRound()
+  }
+
   onClickField(id: number): void {
     if (this.actionCategory === ActionCategory.MakeMove) {
       this.gameModel.makeMove(id)

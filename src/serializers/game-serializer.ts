@@ -1,7 +1,7 @@
 import { Grid } from "honeycomb-grid"
 import { GameModel } from "../models/game-model"
 import { GamefieldModel, SerializedGamefield } from "../models/gamefield-model"
-import { SunPosition } from "../models/sun-model"
+import { Direction } from "../models/sun-model"
 
 export class GameStateSerializer {
   constructor(readonly gameModel: GameModel) {
@@ -22,5 +22,5 @@ export class GameStateSerializer {
 export type SerializedGameState = {
   round: number
   gamefields: Grid<SerializedGamefield>
-  sun: SunPosition
+  sun: Direction
 }

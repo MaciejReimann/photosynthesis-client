@@ -1,6 +1,7 @@
 import { defineGrid, extendHex, Hex, Grid, HexFactory } from "honeycomb-grid"
 import { union } from "lodash"
 
+import { HexgridModel } from "./hexgrid-model"
 import { GamefieldModel, GamefieldDistance } from "./gamefield-model"
 import { Point } from "./point-model"
 import { mapDistanceFromCenterToFertilityIndex } from "./utils"
@@ -14,9 +15,9 @@ export class GameboardModel {
   readonly hexGrid: HexGrid
   readonly gamefieldModelsGrid: GamefieldGrid
 
-  constructor() {
+  constructor(readonly hexgridModel: HexgridModel) {
     this.hex = extendHex()
-    this.hexGrid = defineGrid().hexagon({ radius: 3 })
+    this.hexGrid = hexgridModel.grid // TODO: move all grid related method to the model
     this.gamefieldModelsGrid = this.hexGrid.map(this.buildGamefieldFromHex)
   }
 

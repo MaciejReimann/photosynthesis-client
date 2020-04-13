@@ -1,4 +1,4 @@
-export enum SunPosition {
+export enum Direction {
   E = "E",
   NE = "NE",
   NW = "NW",
@@ -9,20 +9,20 @@ export enum SunPosition {
 
 export class SunModel {
   sunPositions = [
-    SunPosition.E,
-    SunPosition.SE,
-    SunPosition.SW,
-    SunPosition.W,
-    SunPosition.NW,
-    SunPosition.NE,
+    Direction.E,
+    Direction.SE,
+    Direction.SW,
+    Direction.W,
+    Direction.NW,
+    Direction.NE,
   ]
   shadowDirections = [
-    SunPosition.W,
-    SunPosition.NW,
-    SunPosition.NE,
-    SunPosition.E,
-    SunPosition.SE,
-    SunPosition.SW,
+    Direction.W,
+    Direction.NW,
+    Direction.NE,
+    Direction.E,
+    Direction.SE,
+    Direction.SW,
   ]
   currentIndex = 0
 
@@ -35,11 +35,11 @@ export class SunModel {
     this.currentIndex++
   }
 
-  getSunDirection(): SunPosition {
+  getSunDirection(): Direction {
     return this.sunPositions[this.currentIndex]
   }
 
-  getdjacentSunDirections(): SunPosition[] {
+  getdjacentSunDirections(): Direction[] {
     // circular array needs to be used here
     let i = this.currentIndex
     const p = this.sunPositions
@@ -56,7 +56,7 @@ export class SunModel {
     return [p[i - 1], p[i + 1]]
   }
 
-  getShadowDirection(): SunPosition {
+  getShadowDirection(): Direction {
     return this.shadowDirections[this.currentIndex]
   }
 }
