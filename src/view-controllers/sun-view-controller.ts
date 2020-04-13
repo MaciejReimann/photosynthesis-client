@@ -1,4 +1,4 @@
-import { compact } from "lodash"
+import { intersection } from "lodash"
 import { defineGrid, extendHex, Hex, Grid, HexFactory } from "honeycomb-grid"
 
 import { GameConfig, GamefieldBackground } from "../config/gameboardConfig"
@@ -37,31 +37,49 @@ export class SunViewController {
 
   private getRenderCoordinates(hex: HoneycombHex): Point {
     const point = hex.toPoint()
-    return this.getHexCenterOffset(point)
+    return this.getPointCenterOffset(point)
   }
 
-  private getHexesFacingSun() {
+  private getHexesFacingSun(): HoneycombHex[] {
     const sunDirection = this.sunModel.getSunDirection()
+    const adjacentDirections = this.sunModel.getdjacentSunDirections()
     const hexesWithSun = this.getHexesWithSun(sunDirection)
+    const hexesLeftSlope = hexesWithSun.filter((hex: HoneycombHex) =>
+      this.hasNeighboursInDirection(hex, adjacentDirections[0])
+    )
+    const hexesRightSlope = hexesWithSun.filter((hex: HoneycombHex) =>
+      this.hasNeighboursInDirection(hex, adjacentDirections[1])
+    )
 
-    return hexesWithSun
+    return intersection(hexesLeftSlope, hexesRightSlope)
   }
 
   private getHexesWithSun(sunPosition: SunPosition): HoneycombHex[] {
-    return this.outerHexes.filter((p: HoneycombHex) => {
-      return (
-        this.hexgrid.neighborsOf(p, (sunPosition as unknown) as number)[0] !==
-        undefined
-      )
+    return this.outerHexes.filter((hex: HoneycombHex) => {
+      return this.hasNeighboursInDirection(hex, sunPosition)
     })
   }
 
-  private getHexCenterOffset(hex: any) {
+  private hasNeighboursInDirection(
+    hex: HoneycombHex,
+    direction: SunPosition
+  ): boolean {
+    return this.getNeighbourHexInDirection(hex, direction) !== undefined
+  }
+
+  private getNeighbourHexInDirection(
+    hex: HoneycombHex,
+    direction: SunPosition
+  ): HoneycombHex {
+    return this.hexgrid.neighborsOf(hex, (direction as unknown) as number)[0]
+  }
+
+  private getPointCenterOffset(point: Point): Point {
     const { gamefieldConfig, center } = this.config
     const offsetValue = gamefieldConfig.radius + gamefieldConfig.distance
 
-    const x = hex.x * offsetValue + center.x
-    const y = hex.y * offsetValue + center.y
+    const x = point.x * offsetValue + center.x
+    const y = point.y * offsetValue + center.y
 
     return new Point(x, y)
   }
