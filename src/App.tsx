@@ -3,27 +3,10 @@ import { Stage, Layer, Text, Circle, RegularPolygon } from "react-konva"
 
 // Config
 import { GameConfig } from "./config/gameboardConfig"
-
-// Models
-import { PlayerModel } from "./models/player-model"
-import { GameboardModel } from "./models/gameboard-model"
-import { SunModel } from "./models/sun-model"
-import { GameModel } from "./models/game-model"
-import { Point } from "./models/point-model"
-
-// View Controllers
-import { PlayerVewController } from "./view-controllers/player-view-controller"
-import {
-  GameboardViewController,
-  // DisplayProperty,
-} from "./view-controllers/gameboard-view-controller"
-import { SunViewController } from "./view-controllers/sun-view-controller"
-import {
-  GameViewController,
-  ActionCategory,
-} from "./view-controllers/game-view-controller"
+import { initializeGameViewControllers } from "./initializers/initializers"
 
 /// Utils
+import { Point } from "./models/point-model"
 // import { GameStateSerializer } from "./serializers/game-serializer"
 
 // UI Components
@@ -33,33 +16,20 @@ import { Gameboard } from "./components/gameboard/Gameboard"
 import { Sun } from "./components/sun/Sun"
 import styles from "./UserLayout.module.scss"
 
-const { innerWidth, innerHeight } = window
-const center = new Point(innerWidth / 2, innerHeight / 2.5)
-const defaultConfig = new GameConfig(center)
-
-const playerModel = new PlayerModel(0)
-
-const gameboardModel = new GameboardModel()
-const sunModel = new SunModel()
-
-const gameModel = new GameModel(playerModel, gameboardModel, sunModel)
-
-const gameboardViewController = new GameboardViewController(
-  defaultConfig,
-  gameboardModel
-)
-const sunViewController = new SunViewController(
-  defaultConfig,
-  sunModel,
-  gameboardModel
-)
-const gameViewController = new GameViewController(gameModel)
-
-const playerViewController = new PlayerVewController(playerModel)
-
 function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
+
+  const { innerWidth, innerHeight } = window
+  const center = new Point(innerWidth / 2, innerHeight / 2.5)
+  const defaultConfig = new GameConfig(center)
+
+  const {
+    playerViewController,
+    gameboardViewController,
+    sunViewController,
+    gameViewController,
+  } = initializeGameViewControllers(defaultConfig)
 
   return (
     <Layout>
@@ -77,7 +47,7 @@ function App() {
         <div className={styles.button1}>
           <Button
             onClick={() => {
-              gameModel.onNextRound()
+              // gameViewController.onNextRound()
               incrementCounter()
             }}
           >
@@ -97,7 +67,7 @@ function App() {
         <div className={styles.button3}>
           <Button
             onClick={() => {
-              gameViewController.setActionCategory(ActionCategory.MakeMove)
+              // gameViewController.setActionCategory(ActionCategory.MakeMove)
               incrementCounter()
             }}
           >
