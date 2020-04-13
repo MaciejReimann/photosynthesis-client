@@ -11,7 +11,7 @@ interface SunraysProps {
 }
 
 export function Sun({ controller }: SunraysProps) {
-  const anchorPoints = controller.getSunrayAnchorPoints()
+  const anchorPoints = controller.getSunrayRenderCoordinates()
 
   return (
     <Layer>

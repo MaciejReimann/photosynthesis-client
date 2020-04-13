@@ -9,9 +9,9 @@ import {
 } from "./gamefield-model"
 import { SunPosition } from "./sun-model"
 
-type HoneycombDefaultHex = Hex<HexFactory<{}>>
+export type HoneycombHex = Hex<HexFactory<{}>>
 export type GameboardField = BasicFieldModel | GamefieldModel
-export type HexGrid = Grid<HoneycombDefaultHex>
+export type HexGrid = Grid<HoneycombHex>
 export type GamefieldGrid = Grid<GameboardField>
 export type CartesianCoords = { x: number; y: number }
 
@@ -52,7 +52,7 @@ export class GameboardModel {
     return this.getFieldsIds(emptyFieldsInRange)
   }
 
-  getHexCoordsById(id: number): HoneycombDefaultHex {
+  getHexCoordsById(id: number): HoneycombHex {
     return this.hexGrid[id]
   }
 
@@ -115,10 +115,7 @@ export class GameboardModel {
     )
   }
 
-  private buildGamefieldFromHex(
-    hex: HoneycombDefaultHex,
-    id: number
-  ): GameboardField {
+  private buildGamefieldFromHex(hex: HoneycombHex, id: number): GameboardField {
     const centerHex = extendHex()(0, 0)
     const dist = hex.distance(centerHex) as GamefieldDistance
     const fertility = mapDistanceFromCenterToFertilityIndex(dist)
