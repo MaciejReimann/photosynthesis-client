@@ -23,8 +23,8 @@ export class GameboardModel {
 
   // getters
 
-  getGamefieldModelById(id: number): GamefieldModel {
-    return this.gamefieldModels[id]
+  isFieldSeedable(is: number): boolean {
+    return this.getSeedableFieldsIds().includes(is)
   }
 
   getSeedableFieldsIds(): number[] {

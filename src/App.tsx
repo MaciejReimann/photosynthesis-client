@@ -57,6 +57,7 @@ function App() {
         </div>
         <div className={styles.button2}>
           <Button
+            disabled={gameViewController.isSeedingBlocked()}
             onClick={() => {
               gameboardViewController.highlightSeedableFields()
               incrementCounter()
@@ -67,8 +68,9 @@ function App() {
         </div>
         <div className={styles.button3}>
           <Button
+            disabled={gameViewController.isPlantingSmallTreeBlocked()}
             onClick={() => {
-              // gameViewController.setActionCategory(ActionCategory.MakeMove)
+              gameViewController.willMakeMove()
               incrementCounter()
             }}
           >

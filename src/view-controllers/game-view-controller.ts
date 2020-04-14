@@ -17,23 +17,31 @@ export class GameViewController {
 
   // setters
 
-  setActionCategory(moveCategory: ActionCategory): void {
-    this.actionCategory = moveCategory
+  willMakeMove() {
+    this.setActionCategory(ActionCategory.MakeMove)
+  }
+
+  nextRound() {
+    this.gameModel.onNextRound()
   }
 
   //getters
 
-  // isPlantingSmallTreeAllowed(): boolean {
-  //   return this.gameModel.isPlantingSmallTreeAllowed()
-  // }
+  isPlantingSmallTreeBlocked(): boolean {
+    return !this.gameModel.isPlantingSmallTreeAllowed()
+  }
 
-  nextRound() {
-    this.gameModel.onNextRound()
+  isSeedingBlocked(): boolean {
+    return this.gameModel.isInitialRound()
   }
 
   onClickField(id: number): void {
     if (this.actionCategory === ActionCategory.MakeMove) {
       this.gameModel.makeMove(id)
     }
+  }
+
+  private setActionCategory(moveCategory: ActionCategory): void {
+    this.actionCategory = moveCategory
   }
 }
