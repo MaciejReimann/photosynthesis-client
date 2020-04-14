@@ -1,23 +1,23 @@
-import { GamefieldBackground } from "../config/gameboardConfig"
+import { GameConfig, GamefieldBackground } from "../config/gameboardConfig"
 
 import { Point } from "../models/point-model"
-import { GamefieldModel, GamefieldDistance } from "../models/gamefield-model"
+import { GamefieldModel } from "../models/gamefield-model"
 import { TreeSize } from "../models/tree-model"
-
 import { mapFertilityIndexToDistanceFromCenter } from "../models/utils"
 
+import { HexgridViewController } from "../view-controllers/hexgrid-view-controller"
+
 export class GamefieldViewController {
-  public isDesaturated: boolean
+  public isDesaturated: boolean = false
 
   constructor(
+    readonly config: GameConfig,
     readonly fieldModel: GamefieldModel,
-    readonly center: Point,
-    readonly color: GamefieldBackground
+    readonly hexgridViewController: HexgridViewController
   ) {
+    this.config = config
     this.fieldModel = fieldModel
-    this.center = center
-    this.color = color
-    this.isDesaturated = false
+    this.hexgridViewController = hexgridViewController
   }
 
   // setters
@@ -29,11 +29,20 @@ export class GamefieldViewController {
   // getters
 
   getCenterCoords(): Point {
-    return this.center
+    return this.hexgridViewController.getPointCenterOffset(
+      this.fieldModel.hex.toPoint()
+    )
+  }
+
+  getRadius(): number {
+    return this.config.gamefieldConfig.radius
   }
 
   getColor(): GamefieldBackground {
-    return this.color
+    const distanceFromCenter = mapFertilityIndexToDistanceFromCenter(
+      this.fieldModel.fertility
+    )
+    return this.config.colorsConfig.background[distanceFromCenter]
   }
 
   getId(): number {
@@ -44,11 +53,7 @@ export class GamefieldViewController {
     return this.isDesaturated ? 0.5 : 1
   }
 
-  getDistanceFromCenter(): GamefieldDistance {
-    return mapFertilityIndexToDistanceFromCenter(this.fieldModel.fertility)
-  }
-
   getTree(): TreeSize {
-    return this.fieldModel.getTree()
+    return this.fieldModel.tree.get()
   }
 }

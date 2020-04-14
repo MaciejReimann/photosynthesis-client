@@ -1,4 +1,7 @@
+import { extendHex } from "honeycomb-grid"
 import { TreeModel, TreeSize } from "./tree-model"
+import { HoneycombHex, HexGrid } from "./gameboard-model"
+import { mapDistanceFromCenterToFertilityIndex } from "./utils"
 
 export type GamefieldDistance = 0 | 1 | 2 | 3
 export type FertilityIndex = 4 | 3 | 2 | 1
@@ -9,37 +12,50 @@ export type GamefieldModelConfig = {
 }
 
 export class GamefieldModel {
-  readonly id: number
   readonly fertility: FertilityIndex
   readonly tree: TreeModel
-  hasBeenTouched = false
+  private hasBeenTouched = false
 
-  constructor(config: GamefieldModelConfig) {
-    this.id = config.id
-    this.fertility = config.fertility
+  constructor(
+    readonly hex: HoneycombHex,
+    readonly id: number,
+    readonly hexGrid: HexGrid
+  ) {
+    this.hex = hex
+    this.id = id
+    this.hexGrid = hexGrid
+    this.fertility = this.getFertilityIndex()
     this.tree = new TreeModel()
   }
 
   // setters
 
-  setHasBeentouched(value: boolean): void {
+  setHasBeenTouched(value: boolean): void {
     this.hasBeenTouched = value
   }
 
   plantSmallTree(): void {
     if (this.isEmpty()) {
       this.growTree()
-      this.setHasBeentouched(false)
+      this.setHasBeenTouched(false)
       this.growTree()
     }
   }
 
   growTree(): void {
-    if (!this.hasBeenTouched) this.tree.grow()
+    if (!this.hasBeenTouched) {
+      this.tree.grow()
+    }
     this.hasBeenTouched = true
   }
 
   // getters
+
+  getIdsOfFieldsInRange(): number[] {
+    const range = this.tree.getRange()
+    const fieldsInSeedableRange = this.getFieldsInRange(range)
+    return fieldsInSeedableRange.map((f: HoneycombHex) => this.getHexId(f))
+  }
 
   getFertility(): FertilityIndex {
     return this.fertility
@@ -53,31 +69,31 @@ export class GamefieldModel {
     return !this.isEmpty() && !this.hasSeed()
   }
 
-  getSeedableRange(): number {
-    const tree = this.getTree()
-    switch (tree) {
-      case TreeSize.Small:
-        return 1
-      case TreeSize.Medium:
-        return 2
-      case TreeSize.Large:
-        return 3
-      default:
-        return 0
-    }
-  }
-
-  getTree(): TreeSize {
-    return this.tree.get()
+  getFieldsInRange(range: number): HoneycombHex[] {
+    return this.hexGrid.hexesInRange(this.hex, range, false)
   }
 
   serialize(): SerializedGamefield {
     const id = this.id
-    return this.isEmpty() ? { id } : { id, tree: this.getTree() }
+    return this.isEmpty() ? { id } : { id, tree: this.tree.get() }
+  }
+
+  private getHexId(hex: HoneycombHex): number {
+    return this.hexGrid.indexOf(hex)
   }
 
   private hasSeed(): boolean {
     return this.tree.get() === TreeSize.Seed
+  }
+
+  private getDistanceFromCenterHex(): GamefieldDistance {
+    const centerHex = extendHex()(0, 0)
+    return this.hex.distance(centerHex) as GamefieldDistance
+  }
+
+  private getFertilityIndex(): FertilityIndex {
+    const dist = this.getDistanceFromCenterHex()
+    return mapDistanceFromCenterToFertilityIndex(dist)
   }
 }
 

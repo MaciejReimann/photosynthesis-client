@@ -1,14 +1,15 @@
 import React from "react"
 import { Layer } from "react-konva"
 
+import { GameboardViewController } from "../../view-controllers/gameboard-view-controller"
 import { GamefieldViewController } from "../../view-controllers/gamefield-view-controller"
 
 import { GameboardField } from "./GameboardField"
 import { SpriteComponent } from "./SpriteComponent"
 
 interface GameboardProps {
-  controller: any
-  onClick: any
+  controller: GameboardViewController
+  onClick: (i: number) => void
 }
 
 export function Gameboard({ controller, onClick }: GameboardProps) {
@@ -17,7 +18,6 @@ export function Gameboard({ controller, onClick }: GameboardProps) {
       {controller
         .getGameFieldControllers()
         .map((field: GamefieldViewController, i: number) => {
-          // no sun display here
           const fieldCenter = field.getCenterCoords()
           const key = `${fieldCenter.x}${i}`
 
@@ -31,7 +31,7 @@ export function Gameboard({ controller, onClick }: GameboardProps) {
             <GameboardField
               opacity={field.getOpacity()}
               fill={field.getColor()}
-              radius={controller.getGameboardRadius()}
+              radius={field.getRadius()}
               x={fieldCenter.x}
               y={fieldCenter.y}
               key={key}

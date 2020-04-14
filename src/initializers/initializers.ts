@@ -61,7 +61,8 @@ export function initializeGameViewControllers(config: GameConfig) {
   )
   const gameboardViewController = new GameboardViewController(
     config,
-    gameboardModel
+    gameboardModel,
+    innerHexgridViewController
   )
   const sunViewController = new SunViewController(
     config,
