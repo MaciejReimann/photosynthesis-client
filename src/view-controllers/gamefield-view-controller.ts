@@ -26,6 +26,10 @@ export class GamefieldViewController {
     this.isDesaturated = true
   }
 
+  reset(): void {
+    this.isDesaturated = false
+  }
+
   // getters
 
   getCenter(): Point {

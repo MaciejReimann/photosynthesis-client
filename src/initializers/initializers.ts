@@ -70,7 +70,10 @@ export function initializeGameViewControllers(config: GameConfig) {
     sunModel
     // gameboardModel
   )
-  const gameViewController = new GameViewController(gameModel)
+  const gameViewController = new GameViewController(
+    gameModel,
+    gameboardViewController
+  )
 
   return {
     playerViewController,

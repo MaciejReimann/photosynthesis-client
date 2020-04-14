@@ -42,11 +42,17 @@ export class GamefieldModel {
     }
   }
 
+  seed(): void {
+    if (this.isEmpty()) {
+      this.growTree()
+    }
+  }
+
   growTree(): void {
     if (!this.hasBeenTouched) {
       this.tree.grow()
     }
-    this.hasBeenTouched = true
+    this.setHasBeenTouched(true)
   }
 
   // getters
@@ -61,8 +67,12 @@ export class GamefieldModel {
     return this.tree.isEmpty()
   }
 
+  hasSeed(): boolean {
+    return this.tree.hasSeed()
+  }
+
   hasTree(): boolean {
-    return !this.isEmpty() && !this.tree.hasSeed()
+    return !this.isEmpty() && !this.hasSeed()
   }
 
   getFieldsInRange(range: number): HoneycombHex[] {

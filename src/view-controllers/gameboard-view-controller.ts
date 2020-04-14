@@ -33,35 +33,35 @@ export class GameboardViewController {
 
   // setters
 
-  setDisplayProperty(prop: DisplayProperty): void {
-    if (prop === DisplayProperty.SeedableFields)
-      this.isSeedableFieldsSelected = true
+  highlightSeedableFields(): void {
+    this.isSeedableFieldsSelected = true
+
+    this.gamefieldControllers.forEach((gamefieldController) => {
+      const isSeedable = this.gemeboardModel.isFieldSeedable(
+        gamefieldController.getId()
+      )
+
+      !isSeedable && gamefieldController.desaturate()
+    })
   }
 
-  highlightSeedableFields(): void {
-    console.log("higlighting seedable fields")
+  resetSeedableFields(): void {
+    this.isSeedableFieldsSelected = false
 
-    this.gamefieldControllers.forEach((gamefield) => {
-      const isSeedable = this.isGamefieldSeedable(gamefield.getId())
-
-      !isSeedable && gamefield.desaturate()
+    this.gamefieldControllers.forEach((gamefieldController) => {
+      gamefieldController.reset()
     })
   }
 
   // getters
 
-  getGameFieldControllers(): Grid<GamefieldViewController> {
-    if (this.isSeedableFieldsSelected) this.highlightSeedableFields() /// they should be stored in the model after each click
-    return this.gamefieldControllers
-  }
-
   // event handlers
 
   onMouseoverField(fieldIndex: number): void {
-    if (this.isSeedableFieldsSelected) {
-      return console.log("onMouseoverField SEEDABLE", fieldIndex)
-    }
-    console.log("onMouseoverField OTHER", fieldIndex)
+    // if (this.isSeedableFieldsSelected) {
+    //   return console.log("onMouseoverField SEEDABLE", fieldIndex)
+    // }
+    // console.log("onMouseoverField OTHER", fieldIndex)
   }
 
   onClickField(fieldIndex: number): void {
@@ -69,12 +69,6 @@ export class GameboardViewController {
   }
 
   // helpers
-
-  private isGamefieldSeedable(id: number): boolean {
-    const seedableFieldsIds = this.gemeboardModel.getSeedableFieldsIds()
-    // console.log("seedableFieldsIds", seedableFieldsIds)
-    return seedableFieldsIds.includes(id)
-  }
 
   // builders
 
@@ -84,7 +78,7 @@ export class GameboardViewController {
     hexgridViewController: HexgridViewController
   ): Grid<GamefieldViewController> {
     return gameboardModel.gamefieldModels.map(
-      (gamefieldModel: GamefieldModel, i: number) => {
+      (gamefieldModel: GamefieldModel) => {
         return new GamefieldViewController(
           config,
           gamefieldModel,

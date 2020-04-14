@@ -32,6 +32,8 @@ function App() {
   const [counter, setCounter] = useState(0)
   const incrementCounter = () => setCounter(counter + 1)
 
+  const isSmallTreeBlocked = gameViewController.isPlantingSmallTreeBlocked()
+  const isGrowingBlocked = gameViewController.isGrowingTreeBlocked()
   return (
     <Layout>
       <>
@@ -45,6 +47,33 @@ function App() {
           />
           <Sun controller={sunViewController} />
         </Stage>
+
+        <div className={styles.button3}>
+          <Button
+            disabled={
+              !isSmallTreeBlocked ? isSmallTreeBlocked : isGrowingBlocked
+            }
+            onClick={() => {
+              gameViewController.willMakeMove()
+              incrementCounter()
+            }}
+          >
+            {!isSmallTreeBlocked ? "Small Tree" : "Grow Tree"}
+          </Button>
+        </div>
+
+        <div className={styles.button2}>
+          <Button
+            disabled={gameViewController.isSeedingBlocked()}
+            onClick={() => {
+              gameViewController.willSeed()
+              incrementCounter()
+            }}
+          >
+            Seed
+          </Button>
+        </div>
+
         <div className={styles.button1}>
           <Button
             onClick={() => {
@@ -53,28 +82,6 @@ function App() {
             }}
           >
             Next Round
-          </Button>
-        </div>
-        <div className={styles.button2}>
-          <Button
-            disabled={gameViewController.isSeedingBlocked()}
-            onClick={() => {
-              gameboardViewController.highlightSeedableFields()
-              incrementCounter()
-            }}
-          >
-            Seed
-          </Button>
-        </div>
-        <div className={styles.button3}>
-          <Button
-            disabled={gameViewController.isPlantingSmallTreeBlocked()}
-            onClick={() => {
-              gameViewController.willMakeMove()
-              incrementCounter()
-            }}
-          >
-            Small Tree
           </Button>
         </div>
       </>

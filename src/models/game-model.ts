@@ -8,34 +8,28 @@ export class GameModel {
 
   constructor(
     player: PlayerModel,
-    readonly boardModel: GameboardModel,
+    readonly gemeboardModel: GameboardModel,
     readonly sunModel: SunModel
   ) {
     this.players = [player]
-    this.boardModel = boardModel
+    this.gemeboardModel = gemeboardModel
     this.sunModel = sunModel
   }
 
   // setters
 
   makeMove(id: number): void {
-    const gamefield = this.boardModel.gamefieldModels[id]
-    if (this.isSeedingAllowed(id)) {
-      gamefield.growTree()
-      console.log("Making Move")
-      return
-    }
-    if (this.isPlantingSmallTreeAllowed()) {
-      gamefield.plantSmallTree()
-      return
-    }
-    gamefield.growTree()
+    const gamefield = this.gemeboardModel.gamefieldModels[id]
+
+    if (this.isPlantingSmallTreeAllowed()) return gamefield.plantSmallTree()
+    if (this.isSeedingAllowed(id)) return gamefield.seed()
+    if (this.isGrowingAllowed(id)) return gamefield.growTree()
   }
 
   // setters
 
   onNextRound(): void {
-    this.boardModel.activateAllGamefields()
+    this.gemeboardModel.activateAllGamefields()
 
     this.sunModel.rotate()
     this.incrementRound()
@@ -50,14 +44,18 @@ export class GameModel {
   // isMoreMovesAllowedForPlayer(): boolean {}
 
   isPlantingSmallTreeAllowed(): boolean {
-    const treesCount = this.boardModel.getTreesCount()
+    const treesCount = this.gemeboardModel.getTreesCount()
     const isAllowedForFirstRound = this.round === 1 && treesCount < 1
     const isAllowedForSecondRound = this.round === 2 && treesCount < 2
     return isAllowedForFirstRound || isAllowedForSecondRound
   }
 
   isSeedingAllowed(id: number): boolean {
-    return !this.isInitialRound() && this.boardModel.isFieldSeedable(id)
+    return !this.isInitialRound() && this.gemeboardModel.isFieldSeedable(id)
+  }
+
+  isGrowingAllowed(id: number): boolean {
+    return !this.isInitialRound() && this.gemeboardModel.isFieldGrowable(id)
   }
 
   private incrementRound(): void {

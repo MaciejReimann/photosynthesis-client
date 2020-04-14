@@ -11,7 +11,7 @@ export class GameStateSerializer {
   serialize(): SerializedGameState {
     let gamefields: SerializedGamefield[] = []
 
-    this.gameModel.boardModel.gamefieldModels.forEach(
+    this.gameModel.gemeboardModel.gamefieldModels.forEach(
       (gamefield: GamefieldModel) => {
         gamefields.push(this.serializeGamefield(gamefield))
       }

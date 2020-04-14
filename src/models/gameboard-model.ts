@@ -23,8 +23,13 @@ export class GameboardModel {
 
   // getters
 
-  isFieldSeedable(is: number): boolean {
-    return this.getSeedableFieldsIds().includes(is)
+  isFieldSeedable(id: number): boolean {
+    console.log("isFieldSeedable", id, this.getSeedableFieldsIds().includes(id))
+    return this.getSeedableFieldsIds().includes(id)
+  }
+
+  isFieldGrowable(id: number): boolean {
+    return !this.gamefieldModels[id].isEmpty()
   }
 
   getSeedableFieldsIds(): number[] {
