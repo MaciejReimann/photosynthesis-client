@@ -16,12 +16,23 @@ export class TreeModel {
   ]
   private index: number = 0
 
+  // setters
   grow(): void {
     if (this.index === this.growCycle.length - 1) {
       this.index = 0
       return
     }
     this.index = this.index + 1
+  }
+
+  // getters
+
+  isEmpty(): boolean {
+    return this.get() === TreeSize.Empty
+  }
+
+  hasSeed(): boolean {
+    return this.get() === TreeSize.Seed
   }
 
   get(): TreeSize {

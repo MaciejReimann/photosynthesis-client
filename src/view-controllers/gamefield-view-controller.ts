@@ -28,7 +28,7 @@ export class GamefieldViewController {
 
   // getters
 
-  getCenterCoords(): Point {
+  getCenter(): Point {
     return this.hexgridViewController.getPointCenterOffset(
       this.fieldModel.hex.toPoint()
     )

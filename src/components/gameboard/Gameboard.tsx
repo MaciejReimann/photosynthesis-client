@@ -18,7 +18,7 @@ export function Gameboard({ controller, onClick }: GameboardProps) {
       {controller
         .getGameFieldControllers()
         .map((field: GamefieldViewController, i: number) => {
-          const fieldCenter = field.getCenterCoords()
+          const fieldCenter = field.getCenter()
           const key = `${fieldCenter.x}${i}`
 
           const handleClick = () => {

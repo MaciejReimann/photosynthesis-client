@@ -1,5 +1,5 @@
 import { extendHex } from "honeycomb-grid"
-import { TreeModel, TreeSize } from "./tree-model"
+import { TreeModel } from "./tree-model"
 import { HoneycombHex, HexGrid } from "./gameboard-model"
 import { mapDistanceFromCenterToFertilityIndex } from "./utils"
 
@@ -57,33 +57,20 @@ export class GamefieldModel {
     return fieldsInSeedableRange.map((f: HoneycombHex) => this.getHexId(f))
   }
 
-  getFertility(): FertilityIndex {
-    return this.fertility
-  }
-
   isEmpty(): boolean {
-    return this.tree.get() === TreeSize.Empty
+    return this.tree.isEmpty()
   }
 
   hasTree(): boolean {
-    return !this.isEmpty() && !this.hasSeed()
+    return !this.isEmpty() && !this.tree.hasSeed()
   }
 
   getFieldsInRange(range: number): HoneycombHex[] {
     return this.hexGrid.hexesInRange(this.hex, range, false)
   }
 
-  serialize(): SerializedGamefield {
-    const id = this.id
-    return this.isEmpty() ? { id } : { id, tree: this.tree.get() }
-  }
-
   private getHexId(hex: HoneycombHex): number {
     return this.hexGrid.indexOf(hex)
-  }
-
-  private hasSeed(): boolean {
-    return this.tree.get() === TreeSize.Seed
   }
 
   private getDistanceFromCenterHex(): GamefieldDistance {
@@ -95,9 +82,4 @@ export class GamefieldModel {
     const dist = this.getDistanceFromCenterHex()
     return mapDistanceFromCenterToFertilityIndex(dist)
   }
-}
-
-export type SerializedGamefield = {
-  id: number
-  tree?: TreeSize
 }
